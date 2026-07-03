@@ -11,4 +11,5 @@ order: 1
 </div>
 <script src="/assets/js/xterm/xterm.js"></script>
 <script src="/assets/js/xterm/addon-fit.js"></script>
+<script src="/assets/js/cisco.js"></script>
 <script src="/assets/js/terminal.js"></script>

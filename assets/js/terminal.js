@@ -38,13 +38,17 @@ document.addEventListener('DOMContentLoaded', () => {
   term.open(document.getElementById('terminal'));
   fitAddon.fit();
 
-  const prompt = '┌──(amirramzi㉿kali)-[~]\r\n└─# ';
+  const kaliPrompt = '┌──(amirramzi㉿kali)-[~]\r\n└─# ';
+
+  function prompt() {
+    return Cisco.active ? Cisco.getPrompt() : kaliPrompt;
+  }
 
   term.writeln('Kali GNU/Linux Rolling');
   term.writeln("Welcome to Amirhosein Ramzi's Terminal");
   term.writeln("Type 'help' to see available commands.");
   term.writeln('');
-  term.write(prompt);
+  term.write(prompt());
 
   let command = '';
 
@@ -52,26 +56,65 @@ document.addEventListener('DOMContentLoaded', () => {
     switch (e) {
       case '\r':
         term.write('\r\n');
+
+        if (Cisco.waitingPassword) {
+          const success = Cisco.authenticate(term, command.trim());
+
+          command = '';
+
+          if (success) {
+            term.write(Cisco.getPrompt());
+          } else {
+            term.write(kaliPrompt);
+          }
+
+          break;
+        }
+
         execute(command.trim());
         command = '';
-        term.write(prompt);
+
+        if (!Cisco.waitingPassword) {
+          term.write(prompt());
+        }
         break;
 
       case '\u007F':
         if (command.length > 0) {
           command = command.slice(0, -1);
-          term.write('\b \b');
+
+          if (Cisco.waitingPassword) {
+            term.write('\b \b');
+          } else {
+            term.write('\b \b');
+          }
         }
         break;
 
       default:
-        command += e;
-        term.write(e);
+        if (Cisco.waitingPassword) {
+          command += e;
+          term.write('*');
+        } else {
+          command += e;
+          term.write(e);
+        }
     }
   });
 
   function execute(cmd) {
+    if (Cisco.active) {
+      Cisco.execute(term, cmd);
+      return;
+    }
+
     switch (cmd) {
+      case 'ssh admin@router':
+      case 'ssh admin@192.168.1.1':
+      case 'ssh router':
+      case 'ssh cisco':
+        Cisco.login(term);
+        break;
       case 'help':
         term.writeln('');
         term.writeln('Available commands');
@@ -87,6 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         term.writeln(
           '\x1b[1;38;2;254;127;45m🧹  clear\x1b[0m      \x1b[38;2;254;127;45mClear the terminal screen\x1b[0m',
+        );
+        term.writeln(
+          '\x1b[1;38;2;163;196;243m🌐  ssh admin@router\x1b[0m  \x1b[38;2;163;196;243mConnect to Cisco Router\x1b[0m',
         );
         term.writeln(
           '\x1b[1;38;2;163;196;243m❓  help\x1b[0m       \x1b[38;2;163;196;243mDisplay this help message\x1b[0m',
@@ -178,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fitAddon.fit();
   });
 });
+
 document.querySelector('.terminal-wrapper').addEventListener(
   'wheel',
   (e) => {
