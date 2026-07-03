@@ -7,6 +7,7 @@ image:
 tags: [DHCP, Cisco, Security , Kali]
 translation_key: dhcp-attacks  
 lang: en
+mermaid: true
 
 ---
 
@@ -17,6 +18,35 @@ This is a hands-on case study simulating two DHCP-based Layer 2 attacks in an EV
 ---
 
 ## Lab Environment
+
+<p>
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
+    Toggle width collapse
+  </button>
+</p>
+<div style="min-height: 120px;">
+  <div class="collapse collapse-horizontal" id="collapseWidthExample">
+    <div class="card card-body" style="width: 300px;">
+      This is some placeholder content for a horizontal collapse. It’s hidden by default and shown when triggered.
+    </div>
+  </div>
+</div>
+```mermaid
+classDiagram
+Class01 <|-- AveryLongClass : Cool
+Class03 *-- Class04
+Class05 o-- Class06
+Class07 .. Class08
+Class09 --> C2 : Where am i?
+Class09 --* C3
+Class09 --|> Class07
+Class07 : equals()
+Class07 : Object[] elementData
+Class01 : size()
+Class01 : int chimp
+Class01 : int gorilla
+Class08 <--> C2: Cool label
+```
 
 I used EVE-NG as the simulation platform. The topology includes an attacker (Kali Linux) and a victim (Windows), both connected to SW-LAN. SW-Core handles inter-VLAN routing and relays DHCP requests to the server via ip helper-address.
 

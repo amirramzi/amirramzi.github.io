@@ -27,6 +27,30 @@
 //   display: none;
 // }
 
+.terminal-wrapper {
+  background: #0c0c0c;
+  border: 1px solid #1f1f1f;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 0 25px rgba(0, 255, 156, 0.12);
+  overflow: hidden;
+}
+
+#terminal {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+.xterm-viewport {
+  overflow-y: auto !important;
+  scrollbar-width: none;
+}
+
+.xterm-viewport::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 html[lang='fa'] .faArticle p,
 html[lang='fa'] .faArticle h1,
 html[lang='fa'] .faArticle h2,
