@@ -95,7 +95,31 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
 
       case 'about':
-        term.writeln('Network Security Engineer.');
+        term.writeln('');
+        term.writeln('╭────────────────────────────────────────────╮');
+        term.writeln("│ Hi, I'm Amirhosein Ramzi                   │");
+        term.writeln('├────────────────────────────────────────────┤');
+        term.writeln('│ Role   : Network Security Engineer         │');
+        term.writeln('│ Study  : Computer Networks Student         │');
+        term.writeln('│ Focus  : Cisco & Network Security          │');
+        term.writeln('│ Former : Front-End Developer (React/Next)  │');
+        term.writeln('├────────────────────────────────────────────┤');
+        term.writeln('│ Current Focus                              │');
+        term.writeln('│ • CCNA & CCNP                              │');
+        term.writeln('│ • FortiGate & Linux                        │');
+        term.writeln('│ • EVE-NG Labs                              │');
+        term.writeln('│ • Network Automation (Future)              │');
+        term.writeln('├────────────────────────────────────────────┤');
+        term.writeln('│ Technical Skills                           │');
+        term.writeln('│ • TCP/IP, Routing & Switching              │');
+        term.writeln('│ • VLANs, Subnetting, Troubleshooting       │');
+        term.writeln('│ • Firewalls & VPN Technologies             │');
+        term.writeln('│ • Wireshark, Git, GitHub, Linux            │');
+        term.writeln('├────────────────────────────────────────────┤');
+        term.writeln('│ Goal                                       │');
+        term.writeln('│ Build a career in Network Security         │');
+        term.writeln('│ through hands-on labs and real projects.   │');
+        term.writeln('╰────────────────────────────────────────────╯');
         term.writeln('');
         break;
 
@@ -126,3 +150,10 @@ document.addEventListener('DOMContentLoaded', () => {
     fitAddon.fit();
   });
 });
+document.querySelector('.terminal-wrapper').addEventListener(
+  'wheel',
+  (e) => {
+    e.preventDefault();
+  },
+  { passive: false },
+);
