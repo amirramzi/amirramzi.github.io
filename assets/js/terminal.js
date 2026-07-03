@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
           '\x1b[1;38;2;254;127;45m🧹  clear\x1b[0m      \x1b[38;2;254;127;45mClear the terminal screen\x1b[0m',
         );
         term.writeln(
-          '\x1b[1;38;2;163;196;243m🌐  ssh admin@router\x1b[0m  \x1b[38;2;163;196;243mConnect to Cisco Router\x1b[0m',
+          '\x1b[1;38;2;163;196;243m🌐  ssh admin@router\x1b[0m \x1b[38;2;163;196;243mConnect to Cisco Router\x1b[0m',
         );
         term.writeln(
           '\x1b[1;38;2;163;196;243m❓  help\x1b[0m       \x1b[38;2;163;196;243mDisplay this help message\x1b[0m',
