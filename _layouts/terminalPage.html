@@ -1,0 +1,45 @@
+---
+layout: terminalDefault
+---
+
+{% include lang.html %}
+
+<article class="px-1">
+  <div class="content">{{ content }}</div>
+
+  <div id="terminal-container"></div>
+</article>
+
+<link rel="stylesheet" href="/assets/js/xterm/xterm.css" />
+
+<script>
+  const container = document.getElementById("terminal-container");
+
+  if (window.innerWidth <= 768) {
+    container.innerHTML = `
+      <div class="terminal-wrapper">
+      
+        <div id="terminal"></div>
+      </div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="laptop">
+        <div class="laptop-screen">
+          <div class="laptop-content">
+            <div class="terminal-wrapper">
+              <div id="terminal"></div>
+            </div>
+          </div>
+        </div>
+        <div class="laptop-base">
+          <div class="laptop-trackpad"></div>
+        </div>
+      </div>
+    `;
+  }
+</script>
+<script src="/assets/js/xterm/xterm.js"></script>
+<script src="/assets/js/xterm/addon-fit.js"></script>
+<script src="/assets/js/cisco.js"></script>
+<script src="/assets/js/terminal.js"></script>
