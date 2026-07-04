@@ -22,7 +22,54 @@
 .checkbox-wrapper-10 .tgl {
   display: none;
 }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+@media (max-width: 400px) {
+  .ssh-diagram {
+    width: 100%;
+    max-width: 100%;
+    height: 80px !important;
+    overflow: hidden;
+    gap: 8px;
+    margin-top: 5px !important;
+    margin-bottom: 3px !important;
+  }
 
+  .connection {
+    width: 160px !important;
+    margin-top: 10px;
+    flex: 0 0 160px !important;
+  }
+
+  .ssh-text,
+  .password-text {
+    width: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    white-space: nowrap;
+  }
+
+  .device {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 18px !important;
+    padding: 0;
+  }
+
+  .terminal-wrapper {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+  }
+  #terminal {
+    font-size: 12px;
+  }
+}
 @media (max-width: 768px) {
   .ssh-diagram {
     gap: 14px;
@@ -89,7 +136,7 @@
 }
 
 .device {
-  padding: 15px 25px;
+  padding: 25px 25px;
   border: 2px solid #00ff9c;
   border-radius: 12px;
   background: #111;
@@ -210,6 +257,7 @@ $trackpad-color: #666;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 0;
 }
 .terminal-wrapper {
   background: #0c0c0c;
@@ -220,9 +268,13 @@ $trackpad-color: #666;
   overflow: hidden;
   width: 100%;
   height: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 #terminal {
+  min-width: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
