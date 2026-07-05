@@ -183,7 +183,27 @@
   animation: sshPacket 2s linear infinite;
   box-shadow: 0 0 15px #00ff9c;
 }
+[data-bs-theme='light'] {
+  .device {
+    background: #fff;
+    color: #222;
+    border: 2px solid #0a7d53;
+  }
 
+  .connection {
+    background: #bdbdbd;
+  }
+
+  .ssh-text,
+  .password-text {
+    color: #0a7d53;
+  }
+
+  .packet {
+    background: #0a7d53;
+    box-shadow: 0 0 12px rgba(10, 125, 83, 0.5);
+  }
+}
 @keyframes sshPacket {
   from {
     left: 0;
