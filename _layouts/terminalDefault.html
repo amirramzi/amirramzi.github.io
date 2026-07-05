@@ -32,8 +32,6 @@ layout: compress
             content=content lang=lang %} {% else %} {{ content }} {% endif %}
           </main>
         </div>
-
-        {% include_cached search-results.html lang=lang %}
       </div>
 
       <aside aria-label="Scroll to Top">
@@ -52,6 +50,6 @@ layout: compress
     {% if site.pwa.enabled %} {% include_cached notification.html lang=lang %}
     {% endif %} {% for _include in layout.script_includes %} {% assign
     _include_path = _include | append: '.html' %} {% include {{ _include_path }}
-    %} {% endfor %} {% include_cached search-loader.html lang=lang %}
+    %} {% endfor %}
   </body>
 </html>

@@ -3,7 +3,7 @@ layout: terminalPage
 title: Terminal
 icon: fas fa-terminal
 permalink: /terminal/
-order: 1
+order: 2
 mermaid: true
 ---
 
