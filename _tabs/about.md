@@ -3,7 +3,7 @@
 icon: fas fa-info-circle
 order: 7
 ---
-Hi, I'm Amirhosein Ramzi 👋
+Hi, I'm Amirhosein Ramzi  👋
 
 About Me
 
