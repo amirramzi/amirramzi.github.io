@@ -3,7 +3,7 @@ title: "Cisco Configuration Snippet Library"
 date: 2026-06-29 20:00:00 +0330
 categories: [Config]
 image:
-  path:  "../assets/img/posts/config/cisco-config-snippet.png"
+  path:  "../assets/img/cisco/cisco.png"
 tags: [ّFortiGate, Fortinet , config]
 
 ---

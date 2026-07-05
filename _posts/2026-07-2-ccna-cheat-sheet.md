@@ -3,7 +3,7 @@ title: "CCNA Cheat Sheet"
 date: 2026-07-02 20:00:00 +0330
 categories: [Config]
 image:
-  path:  "../assets/img/posts/config/ccna-cheat-sheet.png"
+  path:  "../assets/img/cisco/cisco.png"
 tags: [Cisco, ccna , Config]
 
 

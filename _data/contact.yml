@@ -1,7 +1,7 @@
 #  The contact options.
 
-- type: github
-  icon: "fab fa-github"
+# - type: github
+#   icon: "fab fa-github"
 
 - type: twitter
   icon: "fa-brands fa-x-twitter"
@@ -21,6 +21,10 @@
 - type: medium
   icon: "fab fa-medium" # icons powered by <https://fontawesome.com/>
   url: "https://medium.com/@ramzi.net"
+
+- type: telegram
+  icon: "fab fa-telegram" # icons powered by <https://fontawesome.com/>
+  url: "https://t.me/amirramziir"
 # Uncomment and complete the url below to enable more contact options
 #
 # - type: mastodon

@@ -1,11 +1,12 @@
 ---
-title: "Fortinet"
+title: "Fortinet Products"
 date: 2026-06-29 20:00:00 +0330
 categories: [Config]
 image:
-  path:  "../assets/img/posts/config/fortigate-config-snippet.png"
+  path:  "../assets/img/fortinet/fortinet.jpg"
 tags: [ّFortiGate, Fortinet , config]
-
+translation_key: fortinet-product
+lang: en
 ---
 
 
@@ -48,6 +49,7 @@ Fortinet operates worldwide, with research and development centers, sales office
 
 ## FortiGate
 
+![FortiGate](/assets/img/fortinet/fortigate.webp)
 
 
 
@@ -87,12 +89,19 @@ FortiGate acts as the central enforcement point of the Security Fabric. It share
 - Reduces the need for multiple point products
 - Strong track record with independent security testing labs
 
+
+
+
 ---
+
+
+
 
 ## FortiManager
 
 
 
+![FortiGate](/assets/img/fortinet/fortimanager-gui.png)
 
 
 ### Overview
@@ -133,7 +142,7 @@ FortiManager is one of the two "single panes of glass" for the Security Fabric (
 
 ## FortiAnalyzer
 
-### Product Image
+![FortiGate](/assets/img/fortinet/fortianalyzer.png)
 
 
 ### Overview
@@ -174,7 +183,6 @@ FortiAnalyzer receives logs and telemetry from FortiGate, FortiClient, FortiMail
 
 ## FortiClient
 
-### Product Image
 
 
 ### Overview
@@ -215,7 +223,6 @@ FortiClient reports device posture and security status to FortiGate and FortiCli
 
 ## FortiEMS (FortiClient EMS)
 
-### Product Image
 
 
 ### Overview
@@ -256,7 +263,11 @@ FortiEMS shares endpoint compliance data with FortiGate, enabling dynamic, ident
 
 ## FortiAuthenticator
 
-### Product Image
+### Data Sheet
+ 
+<a class="btn btn-dark"  target="_blank" href="https://www.fortinet.com/content/dam/fortinet/assets/data-sheets/FortiAuthenticator.pdf" role="button">Data Sheet <i class="fa fa-download" aria-hidden="true"></i>
+</a> 
+
 
 
 ### Overview
@@ -337,7 +348,7 @@ FortiToken works directly with FortiGate and FortiAuthenticator to add a verific
 
 ## FortiWeb
 
-### Product Image
+![FortiGate](/assets/img/fortinet/fortiweb.png)
 
 
 ### Overview
