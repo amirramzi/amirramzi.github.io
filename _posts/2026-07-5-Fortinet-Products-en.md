@@ -8,7 +8,7 @@ tags: [ّFortiGate, Fortinet , config]
 
 ---
 
-![Fortinet](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
+
 
 ### Company Overview
 
@@ -50,7 +50,6 @@ Fortinet operates worldwide, with research and development centers, sales office
 
 
 
-![FortiGate]("../assets/img/fortinet-logo.svg")
 
 ### Overview
 
@@ -94,7 +93,7 @@ FortiGate acts as the central enforcement point of the Security Fabric. It share
 
 
 
-![FortiManager](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
+
 
 ### Overview
 
@@ -136,7 +135,6 @@ FortiManager is one of the two "single panes of glass" for the Security Fabric (
 
 ### Product Image
 
-![FortiAnalyzer](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -178,7 +176,6 @@ FortiAnalyzer receives logs and telemetry from FortiGate, FortiClient, FortiMail
 
 ### Product Image
 
-![FortiClient](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -220,7 +217,6 @@ FortiClient reports device posture and security status to FortiGate and FortiCli
 
 ### Product Image
 
-![FortiEMS](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -262,7 +258,6 @@ FortiEMS shares endpoint compliance data with FortiGate, enabling dynamic, ident
 
 ### Product Image
 
-![FortiAuthenticator](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -304,7 +299,6 @@ FortiAuthenticator integrates with FortiGate and FortiToken to enforce strong au
 
 ### Product Image
 
-![FortiToken](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -345,7 +339,6 @@ FortiToken works directly with FortiGate and FortiAuthenticator to add a verific
 
 ### Product Image
 
-![FortiWeb](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -387,7 +380,6 @@ FortiWeb shares threat and log data with FortiAnalyzer and FortiSIEM, and can wo
 
 ### Product Image
 
-![FortiMail](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -429,7 +421,6 @@ FortiMail can forward suspicious attachments to FortiSandbox for detonation anal
 
 ### Product Image
 
-![FortiSandbox](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -471,7 +462,6 @@ FortiSandbox receives files automatically from FortiGate, FortiMail, and FortiWe
 
 ### Product Image
 
-![FortiADC](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -513,7 +503,6 @@ FortiADC works alongside FortiWeb and FortiGate to add availability and performa
 
 ### Product Image
 
-![FortiSwitch](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -555,7 +544,6 @@ FortiSwitch can be managed directly through a connected FortiGate, meaning switc
 
 ### Product Image
 
-![FortiAP](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -597,7 +585,6 @@ Like FortiSwitch, FortiAP can be centrally managed through FortiGate, allowing w
 
 ### Product Image
 
-![FortiExtender](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -639,7 +626,6 @@ FortiExtender integrates with FortiGate's Secure SD-WAN capabilities, allowing t
 
 ### Product Image
 
-![FortiProxy](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -681,7 +667,6 @@ FortiProxy shares logs and threat data with FortiAnalyzer and can work alongside
 
 ### Product Image
 
-![FortiNAC](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -723,7 +708,6 @@ FortiNAC works with FortiGate, FortiSwitch, and FortiAP to enforce access decisi
 
 ### Product Image
 
-![FortiSIEM](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -765,7 +749,6 @@ FortiSIEM ingests data from FortiGate and other Fabric components alongside thir
 
 ### Product Image
 
-![FortiSOAR](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -807,7 +790,6 @@ FortiSOAR connects with FortiAnalyzer, FortiSIEM, and FortiGate, allowing automa
 
 ### Product Image
 
-![FortiMonitor](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -849,7 +831,6 @@ FortiMonitor complements FortiGate's Secure SD-WAN capabilities by providing vis
 
 ### Product Image
 
-![FortiAIOps](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -891,7 +872,6 @@ FortiAIOps draws telemetry from FortiGate, FortiSwitch, and FortiAP, applying AI
 
 ### Product Image
 
-![FortiRecon](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -933,7 +913,6 @@ FortiRecon findings can feed into FortiAnalyzer, FortiSIEM, and FortiSOAR, allow
 
 ### Product Image
 
-![FortiSASE](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -975,7 +954,6 @@ FortiSASE extends the Security Fabric to remote users and cloud environments, sh
 
 ### Product Image
 
-![FortiDeceptor](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
@@ -1017,7 +995,6 @@ FortiDeceptor alerts integrate with FortiAnalyzer, FortiSIEM, and FortiSOAR, ena
 
 ### Product Image
 
-![FortiDDoS](https://www.fortinet.com/content/dam/fortinet/images/general/fortinet-logo.svg)
 
 ### Overview
 
