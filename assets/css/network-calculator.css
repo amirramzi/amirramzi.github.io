@@ -711,10 +711,10 @@ table.nc-table tr.nc-row-highlight td {
   }
 }
 
-.myAccordion-item,
+/* .myAccordion-item,
 .myAccordion-button,
-.accordion-collapse,
-.ccordion-body {
+.myAccordion-collapse,
+.myAccordion-body {
   --nc-bg: var(--main-bg, #ffffff);
   --nc-bg-inset: var(--tag-bg, rgba(0, 0, 0, 0.035));
   --nc-border: var(--card-border-color, none);
@@ -735,7 +735,113 @@ table.nc-table tr.nc-row-highlight td {
   border: 1px solid var(--nc-border) !important;
   border-radius: 0.5rem !important;
   box-shadow: 0 1px 3px var(--nc-shadow) !important;
+
 }
 .accordion-button {
+  --nc-accent: var(--link-color, #2a5dab);
   color: var(--nc-accent);
+} */
+/* Network Calculator Accordion Custom Style */
+
+.myAccordion {
+  --nc-bg: var(--main-bg, #ffffff);
+  --nc-bg-inset: var(--tag-bg, rgba(0, 0, 0, 0.035));
+  --nc-border: var(--card-border-color, none);
+  --nc-shadow: var(--card-box-shadow, rgba(0, 0, 0, 0.05));
+  --nc-text: var(--text-color, #34343c);
+  --nc-text-muted: var(--text-muted-color, gray);
+  --nc-heading: var(--heading-color, #1a1a1a);
+  --nc-link: var(--link-color, #2a5dab);
+  --nc-btn-border: var(--btn-border-color, #e9ecef);
+  --nc-btn-bg: var(--button-bg, var(--main-bg, #fff));
+  --nc-tag-bg: var(--tag-bg, rgba(0, 0, 0, 0.05));
+  --nc-tag-hover: var(--tag-hover, #dee2e6);
+  --nc-table-border: var(--tb-border-color, #eaeaea);
+  --nc-table-odd: var(--tb-odd-bg, rgba(0, 0, 0, 0.015));
+  --nc-code-bg: var(--kbd-bg-color, var(--tag-bg, rgba(0, 0, 0, 0.05)));
+
+  width: 100%;
+}
+
+/* Accordion Item */
+.myAccordion-item {
+  background: var(--nc-bg);
+  border: 1px solid var(--nc-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: var(--nc-shadow);
+}
+
+/* Accordion Button */
+.myAccordion-button {
+  background: var(--nc-bg);
+  color: var(--nc-heading);
+  font-weight: 600;
+  padding: 1rem 1.25rem;
+  border: none;
+  box-shadow: none;
+}
+
+/* Open state */
+.myAccordion-button:not(.collapsed) {
+  color: var(--nc-link);
+  background: var(--nc-bg);
+  box-shadow: none;
+}
+
+/* Remove Bootstrap focus */
+.myAccordion-button:focus {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Arrow icon */
+.myAccordion-button::after {
+  filter: none;
+}
+
+/* Accordion Content */
+.myAccordion-collapse {
+  background: var(--nc-bg);
+}
+
+/* Body */
+.myAccordion-body {
+  color: var(--nc-text);
+  background: var(--nc-bg);
+  padding: 1.25rem;
+  line-height: 1.8;
+}
+
+/* Headings inside */
+.myAccordion-body h3,
+.myAccordion-body h4,
+.myAccordion-body h5 {
+  color: var(--nc-heading);
+}
+
+/* Links */
+.myAccordion-body a {
+  color: var(--nc-link);
+}
+
+/* Code blocks */
+.myAccordion-body code {
+  background: var(--tag-bg);
+  border-radius: 0.35rem;
+  padding: 0.15rem 0.35rem;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .myAccordion-button {
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .myAccordion-body {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
 }

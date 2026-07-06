@@ -153,7 +153,7 @@ permalink: /network-calculator/
 <div class="accordion" id="netcalcFaqAccordion">
 
   <div class="accordion-item myAccordion-item">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq1" aria-expanded="false" aria-controls="netcalcFaq1">
         What Is Subnetting? (And Why Every Network Engineer Needs to Understand It)
       </button>
@@ -177,7 +177,7 @@ permalink: /network-calculator/
 
   <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead2">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq2" aria-expanded="false" aria-controls="netcalcFaq2">
         CIDR Notation Explained: What Does /24, /26, or /30 Actually Mean?
       </button>
@@ -201,7 +201,7 @@ permalink: /network-calculator/
 
   <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead3">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq3" aria-expanded="false" aria-controls="netcalcFaq3">
         Wildcard Masks Explained (and Why Cisco ACLs Use Them Instead of Subnet Masks)
       </button>
@@ -225,7 +225,7 @@ permalink: /network-calculator/
 
   <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead4">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq4" aria-expanded="false" aria-controls="netcalcFaq4">
         Network ID vs. Broadcast Address: What's the Difference?
       </button>
@@ -250,7 +250,7 @@ permalink: /network-calculator/
 
   <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead5">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq5" aria-expanded="false" aria-controls="netcalcFaq5">
         Cisco IOS Subnetting Example: Configuring an Interface with the Right Mask
       </button>
@@ -275,7 +275,7 @@ permalink: /network-calculator/
 
   <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead6">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq6" aria-expanded="false" aria-controls="netcalcFaq6">
         VLSM Example: Allocating Subnets by Host Count Instead of Guessing
       </button>
@@ -299,7 +299,7 @@ permalink: /network-calculator/
 
   <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead7">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq7" aria-expanded="false" aria-controls="netcalcFaq7">
         IP Address Breakdown Example: Reading an Address in Binary and Hex
       </button>
@@ -324,7 +324,7 @@ permalink: /network-calculator/
 
   <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead8">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq8" aria-expanded="false" aria-controls="netcalcFaq8">
         Why Network Engineers Actually Use a Subnet Calculator Day to Day
       </button>
@@ -345,7 +345,7 @@ permalink: /network-calculator/
 
   <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead9">
-      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button   myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq9" aria-expanded="false" aria-controls="netcalcFaq9">
         Real-World Cisco Use Cases for CIDR, VLSM, and Wildcard Masks
       </button>
