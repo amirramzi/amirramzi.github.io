@@ -711,8 +711,8 @@ table.nc-table tr.nc-row-highlight td {
   }
 }
 
-.accordion-item,
-.accordion-button,
+.myAccordion-item,
+.myAccordion-button,
 .accordion-collapse,
 .ccordion-body {
   --nc-bg: var(--main-bg, #ffffff);

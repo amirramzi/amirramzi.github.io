@@ -152,14 +152,14 @@ permalink: /network-calculator/
 
 <div class="accordion" id="netcalcFaqAccordion">
 
-  <div class="accordion-item">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+  <div class="accordion-item myAccordion-item">
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq1" aria-expanded="false" aria-controls="netcalcFaq1">
         What Is Subnetting? (And Why Every Network Engineer Needs to Understand It)
       </button>
     <div id="netcalcFaq1" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead1"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>Subnetting is the process of dividing a large IP network into smaller, logical
         segments called subnets. Instead of running every device in a company on one flat
         /24 network, subnetting lets you split that address space into departments, VLANs,
@@ -175,16 +175,16 @@ permalink: /network-calculator/
     </div>
   </div>
 
-  <div class="accordion-item">
+  <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead2">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq2" aria-expanded="false" aria-controls="netcalcFaq2">
         CIDR Notation Explained: What Does /24, /26, or /30 Actually Mean?
       </button>
     </h3>
     <div id="netcalcFaq2" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead2"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>CIDR (Classless Inter-Domain Routing) notation is the "/24" appended to an IP
         address, as in 192.168.1.0/24. The number after the slash tells you how many bits
         of the 32-bit IPv4 address are reserved for the network portion — the rest are host
@@ -199,16 +199,16 @@ permalink: /network-calculator/
     </div>
   </div>
 
-  <div class="accordion-item">
+  <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead3">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq3" aria-expanded="false" aria-controls="netcalcFaq3">
         Wildcard Masks Explained (and Why Cisco ACLs Use Them Instead of Subnet Masks)
       </button>
     </h3>
     <div id="netcalcFaq3" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead3"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>A wildcard mask looks like a subnet mask but works in reverse. In a subnet mask, a
         1 bit means "this bit must match"; in a wildcard mask, a 1 bit means "don't care, this
         bit can be anything." Cisco uses wildcard masks — not subnet masks — in access control
@@ -223,16 +223,16 @@ permalink: /network-calculator/
     </div>
   </div>
 
-  <div class="accordion-item">
+  <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead4">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq4" aria-expanded="false" aria-controls="netcalcFaq4">
         Network ID vs. Broadcast Address: What's the Difference?
       </button>
     </h3>
     <div id="netcalcFaq4" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead4"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>Every subnet reserves exactly two addresses that can't be assigned to a host. The
         <strong>network ID</strong> is the lowest address in the range, with all host bits set
         to 0 — it identifies the subnet itself, not a device on it. The
@@ -248,16 +248,16 @@ permalink: /network-calculator/
   </div>
 
 
-  <div class="accordion-item">
+  <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead5">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq5" aria-expanded="false" aria-controls="netcalcFaq5">
         Cisco IOS Subnetting Example: Configuring an Interface with the Right Mask
       </button>
     </h3>
     <div id="netcalcFaq5" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead5"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>Say you need to configure a router interface on the 192.168.1.0/24 network with
         the first usable address. In Cisco IOS, that looks like:</p>
         <pre><code>interface GigabitEthernet0/0
@@ -273,16 +273,16 @@ permalink: /network-calculator/
     </div>
   </div>
 
-  <div class="accordion-item">
+  <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead6">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq6" aria-expanded="false" aria-controls="netcalcFaq6">
         VLSM Example: Allocating Subnets by Host Count Instead of Guessing
       </button>
     </h3>
     <div id="netcalcFaq6" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead6"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>Variable Length Subnet Masking (VLSM) lets you carve a single network into subnets
         of different sizes based on how many hosts each segment actually needs, instead of
         forcing every department onto the same fixed-size subnet. Starting from
@@ -297,16 +297,16 @@ permalink: /network-calculator/
     </div>
   </div>
 
-  <div class="accordion-item">
+  <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead7">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq7" aria-expanded="false" aria-controls="netcalcFaq7">
         IP Address Breakdown Example: Reading an Address in Binary and Hex
       </button>
     </h3>
     <div id="netcalcFaq7" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead7"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>Take 192.168.1.55/26. In binary, that's
         <code>11000000.10101000.00000001.00110111</code> — the /26 prefix means the first 26
         bits are the network portion and the remaining 6 are host bits. That places this
@@ -322,16 +322,16 @@ permalink: /network-calculator/
   </div>
 
 
-  <div class="accordion-item">
+  <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead8">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq8" aria-expanded="false" aria-controls="netcalcFaq8">
         Why Network Engineers Actually Use a Subnet Calculator Day to Day
       </button>
     </h3>
     <div id="netcalcFaq8" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead8"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>Experienced engineers can still do subnetting math by hand — but on a live call,
         during a change window, or while troubleshooting an outage, manual binary math is
         slow and easy to get wrong under pressure. A subnet calculator isn't a crutch; it's
@@ -343,16 +343,16 @@ permalink: /network-calculator/
     </div>
   </div>
 
-  <div class="accordion-item">
+  <div class="accordion-item myAccordion-item">
     <h3 class="accordion-header" id="netcalcFaqHead9">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      <button class="accordion-button myAccordion-button  myaccordion-button myAccordion-button   collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#netcalcFaq9" aria-expanded="false" aria-controls="netcalcFaq9">
         Real-World Cisco Use Cases for CIDR, VLSM, and Wildcard Masks
       </button>
     </h3>
     <div id="netcalcFaq9" class="accordion-collapse collapse" aria-labelledby="netcalcFaqHead9"
          data-bs-parent="#netcalcFaqAccordion">
-      <div class="accordion-body">
+      <div class="accordion-body myAccordion-body">
         <p>These concepts come up constantly in real Cisco environments: sizing a new branch
         office's LAN with VLSM so it doesn't waste address space, writing a standard ACL
         wildcard mask to permit traffic from a specific subnet, calculating the correct OSPF
