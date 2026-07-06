@@ -4,7 +4,7 @@ date: 2026-06-29 20:00:00 +0330
 categories: [Config]
 image:
   path:  "../assets/img/fortinet/fortinet.jpg"
-tags: [ّFortiGate, Fortinet , config]
+tags: [FortiGate, Fortinet , config]
 translation_key: fortinet-product
 lang: en
 ---
