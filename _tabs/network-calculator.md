@@ -5,7 +5,6 @@ order: 3
 title: Calculator
 permalink: /network-calculator/
 ---
-<link rel="stylesheet" href="{{ '/assets/css/bootstrap.min.css' | relative_url }}">
 <link rel="stylesheet" href="{{ '/assets/css/network-calculator.css' | relative_url }}">
 
 <div class="netcalc-app" id="netcalc-app">
