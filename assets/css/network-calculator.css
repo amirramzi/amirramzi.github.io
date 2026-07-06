@@ -711,10 +711,10 @@ table.nc-table tr.nc-row-highlight td {
   }
 }
 
-.myAccordion-item,
-.myAccordion-button,
-.myAccordion-collapse,
-.myAccordion-body {
+.accordion-item,
+.accordion-button,
+.accordion-collapse,
+.accordion-body {
   --nc-bg: var(--main-bg, #ffffff);
   --nc-bg-inset: var(--tag-bg, rgba(0, 0, 0, 0.035));
   --nc-border: var(--card-border-color, none);
