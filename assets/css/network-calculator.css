@@ -1,0 +1,711 @@
+/* =========================================================================
+   NETWORK CALCULATOR — theme adapter
+   Every color below is pulled from Chirpy's own CSS custom properties
+   (defined by the theme in _sass/themes/*.scss and swapped automatically
+   via html[data-mode]). Fallback values after the comma only apply when
+   previewing this file outside a Chirpy build; inside Chirpy they are
+   never used because the real variables already exist on :root.
+========================================================================= */
+.netcalc-app {
+  --nc-bg: var(--main-bg, #ffffff);
+  --nc-bg-inset: var(--tag-bg, rgba(0, 0, 0, 0.035));
+  --nc-border: var(--card-border-color, none);
+  --nc-shadow: var(--card-box-shadow, rgba(0, 0, 0, 0.05));
+  --nc-text: var(--text-color, #34343c);
+  --nc-text-muted: var(--text-muted-color, gray);
+  --nc-heading: var(--heading-color, #1a1a1a);
+  --nc-link: var(--link-color, #2a5dab);
+  --nc-btn-border: var(--btn-border-color, #e9ecef);
+  --nc-btn-bg: var(--button-bg, var(--main-bg, #fff));
+  --nc-tag-bg: var(--tag-bg, rgba(0, 0, 0, 0.05));
+  --nc-tag-hover: var(--tag-hover, #dee2e6);
+  --nc-table-border: var(--tb-border-color, #eaeaea);
+  --nc-table-odd: var(--tb-odd-bg, rgba(0, 0, 0, 0.015));
+  --nc-code-bg: var(--kbd-bg-color, var(--tag-bg, rgba(0, 0, 0, 0.05)));
+
+  /* semantic accents — reused straight from Chirpy's own prompt/callout colors,
+     so "network / host / valid / error" read as native site colors, not a new palette */
+  --nc-accent: var(--link-color, #2a5dab); /* network bits, primary data   */
+  --nc-warn: var(
+    --prompt-warning-icon-color,
+    #ef9c03
+  ); /* host bits, caution      */
+  --nc-warn-bg: var(--prompt-warning-bg, rgba(239, 156, 3, 0.12));
+  --nc-good: var(
+    --prompt-tip-icon-color,
+    #18a558
+  ); /* usable / match / valid  */
+  --nc-good-bg: var(--prompt-tip-bg, rgba(24, 165, 88, 0.12));
+  --nc-bad: var(
+    --prompt-danger-icon-color,
+    #df3c30
+  ); /* invalid / no match      */
+  --nc-bad-bg: var(--prompt-danger-bg, rgba(223, 60, 48, 0.12));
+  --nc-info: var(--prompt-info-icon-color, #0070cb);
+  --nc-info-bg: var(--prompt-info-bg, rgba(0, 112, 203, 0.1));
+
+  --nc-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
+
+  color: var(--nc-text);
+  background: var(--nc-bg);
+  border: 1px solid var(--nc-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px var(--nc-shadow);
+  padding: 0;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.netcalc-app * {
+  box-sizing: border-box;
+}
+.netcalc-app code {
+  font-family: var(--nc-mono);
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+.netcalc-app h2,
+.netcalc-app h3 {
+  color: var(--nc-heading);
+  font-weight: 600;
+}
+
+/* ---------- toolbar / header ---------- */
+.nc-toolbar {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--nc-border);
+  background: var(--nc-bg-inset);
+}
+.nc-toolbar-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+.nc-title {
+  font-size: 1.15rem;
+  margin: 0 0 0.2rem;
+}
+.nc-subtitle {
+  font-size: 0.83rem;
+  color: var(--nc-text-muted);
+  margin: 0;
+}
+
+.nc-edu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--nc-text-muted);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.nc-edu-toggle input {
+  accent-color: var(--nc-link);
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+}
+
+.nc-input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.8rem;
+}
+.nc-input-label {
+  font-size: 0.78rem;
+  color: var(--nc-text-muted);
+  font-weight: 600;
+}
+.nc-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.nc-input-main {
+  font-size: 1.05rem;
+  font-weight: 600;
+  max-width: 340px;
+}
+.nc-status-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+  background: var(--nc-good-bg);
+  color: var(--nc-good);
+  white-space: nowrap;
+}
+.nc-status-badge.err {
+  background: var(--nc-bad-bg);
+  color: var(--nc-bad);
+}
+
+.nc-cidr-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.nc-cidr-label {
+  font-size: 0.75rem;
+  color: var(--nc-text-muted);
+  width: 22px;
+}
+.nc-cidr-current {
+  font-size: 0.85rem;
+  color: var(--nc-accent);
+  font-weight: 700;
+  width: 36px;
+  text-align: right;
+}
+.nc-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--nc-btn-border);
+  outline: none;
+  cursor: pointer;
+  accent-color: var(--nc-accent);
+}
+.nc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--nc-accent);
+  cursor: pointer;
+  border: 2px solid var(--nc-bg);
+  box-shadow: 0 0 0 1px var(--nc-accent);
+}
+.nc-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--nc-accent);
+  cursor: pointer;
+  border: 2px solid var(--nc-bg);
+}
+
+/* ---------- tabs ---------- */
+.nc-tabs {
+  display: flex;
+  overflow-x: auto;
+  background: var(--nc-bg);
+  border-bottom: 1px solid var(--nc-border);
+  scrollbar-width: thin;
+}
+.nc-tab {
+  font-family: inherit;
+  background: none;
+  border: none;
+  color: var(--nc-text-muted);
+  padding: 0.65rem 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.nc-tab:hover {
+  color: var(--nc-text);
+  background: var(--nc-tag-bg);
+}
+.nc-tab.active {
+  color: var(--nc-accent);
+  border-bottom-color: var(--nc-accent);
+}
+
+/* ---------- panels ---------- */
+.nc-panel {
+  display: none;
+  padding: 1.1rem 1.25rem 1.3rem;
+}
+.nc-panel.active {
+  display: block;
+}
+
+.nc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.7rem;
+}
+.nc-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.nc-card {
+  background: var(--nc-bg);
+  border: 1px solid var(--nc-border);
+  border-radius: 0.4rem;
+  padding: 0.8rem 0.9rem;
+  box-shadow: 0 1px 2px var(--nc-shadow);
+}
+.nc-card-wide {
+  grid-column: 1 / -1;
+}
+.nc-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--nc-text-muted);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--nc-border);
+}
+
+/* individual data field cell (Core tab) */
+.nc-field {
+  background: var(--nc-bg-inset);
+  border: 1px solid var(--nc-border);
+  border-radius: 0.4rem;
+  padding: 0.65rem 0.75rem;
+  position: relative;
+}
+.nc-field-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--nc-text-muted);
+  margin-bottom: 0.3rem;
+}
+.nc-field-value {
+  font-family: var(--nc-mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--nc-heading);
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+.nc-field-value.accent-cyan {
+  color: var(--nc-accent);
+}
+.nc-field-value.accent-amber {
+  color: var(--nc-warn);
+}
+.nc-field-value.accent-green {
+  color: var(--nc-good);
+}
+.nc-field-value.accent-purple {
+  color: var(--nc-info);
+}
+.nc-field-sub {
+  font-size: 0.7rem;
+  color: var(--nc-text-muted);
+  margin-top: 0.2rem;
+}
+
+.nc-copy {
+  background: var(--nc-btn-bg);
+  border: 1px solid var(--nc-btn-border);
+  color: var(--nc-text-muted);
+  cursor: pointer;
+  border-radius: 0.3rem;
+  font-size: 0.68rem;
+  padding: 0.12rem 0.4rem;
+  font-family: inherit;
+  flex-shrink: 0;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+.nc-copy:hover {
+  color: var(--nc-accent);
+  border-color: var(--nc-accent);
+}
+
+.nc-tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--nc-tag-bg);
+  color: var(--nc-text-muted);
+  font-size: 9px;
+  cursor: help;
+  position: relative;
+}
+.nc-tip:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background: var(--nc-bg);
+  border: 1px solid var(--nc-border);
+  color: var(--nc-text);
+  padding: 0.5rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 400;
+  line-height: 1.4;
+  border-radius: 0.4rem;
+  z-index: 20;
+  box-shadow: 0 6px 20px var(--nc-shadow);
+}
+
+/* ---------- edu mode ---------- */
+.edu-note {
+  display: none;
+  font-size: 0.8rem;
+  color: var(--nc-text-muted);
+  border-left: 3px solid var(--nc-accent);
+  padding: 0.5rem 0.8rem;
+  margin-top: 0.9rem;
+  background: var(--nc-bg-inset);
+  border-radius: 0 0.3rem 0.3rem 0;
+}
+.netcalc-app.edu-on .edu-note {
+  display: block;
+}
+
+/* ---------- binary bitmap ---------- */
+.nc-bitmap-octet {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 6px 10px 0;
+}
+.nc-bitmap-bits {
+  display: flex;
+}
+.nc-bit {
+  width: 22px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--nc-mono);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--nc-border);
+  background: var(--nc-bg-inset);
+  color: var(--nc-text-muted);
+}
+.nc-bit.net {
+  background: var(--nc-info-bg);
+  color: var(--nc-accent);
+  border-color: var(--nc-accent);
+}
+.nc-bit.host {
+  background: var(--nc-warn-bg);
+  color: var(--nc-warn);
+  border-color: var(--nc-warn);
+}
+.nc-bitmap-dec {
+  margin-top: 5px;
+  font-size: 11px;
+  color: var(--nc-text-muted);
+  font-family: var(--nc-mono);
+}
+.nc-bitmap-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 0.4rem;
+}
+.nc-bitmap-legend {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 0.78rem;
+  color: var(--nc-text-muted);
+  margin-top: 0.5rem;
+}
+.nc-legend-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* ---------- forms ---------- */
+.nc-input,
+.nc-textarea {
+  background: var(--nc-bg);
+  border: 1px solid var(--nc-btn-border);
+  color: var(--nc-text);
+  font-family: var(--nc-mono);
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.35rem;
+  font-size: 0.85rem;
+  outline: none;
+  width: 100%;
+}
+.nc-input:focus,
+.nc-textarea:focus {
+  border-color: var(--nc-accent);
+}
+.nc-input-narrow {
+  width: 110px;
+}
+.nc-textarea {
+  resize: vertical;
+  margin: 0.5rem 0;
+}
+.nc-vlsm-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+.nc-vlsm-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--nc-text-muted);
+  font-weight: 600;
+}
+.nc-inline-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--nc-text-muted);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+.nc-hint {
+  font-size: 0.75rem;
+  color: var(--nc-text-muted);
+  margin: 0 0 0.3rem;
+}
+.nc-hint-inline {
+  font-size: 0.75rem;
+  color: var(--nc-text-muted);
+  margin-left: 0.4rem;
+}
+
+.nc-btn {
+  background: var(--nc-btn-bg);
+  border: 1px solid var(--nc-btn-border);
+  color: var(--nc-text);
+  font-family: inherit;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.35rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+.nc-btn:hover {
+  border-color: var(--nc-accent);
+  color: var(--nc-accent);
+}
+.nc-btn-primary {
+  background: var(--nc-info-bg);
+  border-color: var(--nc-accent);
+  color: var(--nc-accent);
+  font-weight: 600;
+}
+.nc-btn-primary:hover {
+  filter: brightness(0.96);
+}
+.nc-btn-mini {
+  font-size: 0.68rem;
+  padding: 0.15rem 0.45rem;
+}
+
+.nc-vlsm-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.nc-vlsm-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.nc-vlsm-row input[type='text'] {
+  flex: 2;
+}
+.nc-vlsm-row input[type='number'] {
+  flex: 1;
+}
+.nc-vlsm-row .nc-remove {
+  background: none;
+  border: none;
+  color: var(--nc-bad);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+}
+
+.nc-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1rem 0;
+  color: var(--nc-text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+.nc-divider::before,
+.nc-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--nc-border);
+}
+
+/* ---------- tables ---------- */
+.nc-table-wrap {
+  overflow-x: auto;
+  margin-top: 0.8rem;
+}
+table.nc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+table.nc-table th {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  background: var(--nc-bg-inset);
+  color: var(--nc-text-muted);
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--nc-table-border);
+}
+table.nc-table td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--nc-table-border);
+  color: var(--nc-text);
+  white-space: nowrap;
+  font-family: var(--nc-mono);
+}
+table.nc-table tr:nth-child(odd) td {
+  background: var(--nc-table-odd);
+}
+table.nc-table tr:hover td {
+  background: var(--nc-tag-bg);
+}
+table.nc-table tr.nc-row-highlight td {
+  background: var(--nc-good-bg);
+}
+
+/* ---------- cisco block ---------- */
+.nc-code-block {
+  background: var(--nc-code-bg);
+  border: 1px solid var(--nc-border);
+  border-radius: 0.4rem;
+  padding: 0.65rem 0.8rem;
+  font-family: var(--nc-mono);
+  font-size: 0.82rem;
+  color: var(--nc-text);
+  margin-bottom: 0.6rem;
+  position: relative;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.nc-code-block .nc-copy {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+}
+.nc-acl-bits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0.5rem 0;
+}
+.nc-acl-match {
+  font-weight: 700;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.35rem;
+  display: inline-block;
+  font-size: 0.8rem;
+}
+.nc-acl-match.yes {
+  background: var(--nc-good-bg);
+  color: var(--nc-good);
+}
+.nc-acl-match.no {
+  background: var(--nc-bad-bg);
+  color: var(--nc-bad);
+}
+
+.nc-toast {
+  position: fixed;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--nc-bg);
+  border: 1px solid var(--nc-border);
+  color: var(--nc-text);
+  padding: 0.5rem 1rem;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 6px 20px var(--nc-shadow);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  z-index: 9999;
+}
+.nc-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  .netcalc-app {
+    font-size: 0.88rem;
+  }
+  .nc-input-main {
+    max-width: 100%;
+  }
+  .nc-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .nc-bit {
+    width: 16px;
+    height: 22px;
+    font-size: 10px;
+  }
+  .nc-vlsm-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .netcalc-app * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

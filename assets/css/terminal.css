@@ -1,0 +1,271 @@
+@media (max-width: 400px) {
+  .ssh-diagram {
+    width: 100%;
+    max-width: 100%;
+    height: 80px !important;
+    overflow: hidden;
+    gap: 8px;
+    margin-top: 5px !important;
+    margin-bottom: 3px !important;
+  }
+
+  .connection {
+    width: 160px !important;
+    margin-top: 10px;
+    flex: 0 0 160px !important;
+  }
+
+  .ssh-text,
+  .password-text {
+    width: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    white-space: nowrap;
+  }
+
+  .device {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 18px !important;
+    padding: 0;
+  }
+
+  .terminal-wrapper {
+    width: 95vw !important;
+    box-sizing: border-box;
+    padding: 8px;
+  }
+  #terminal {
+    font-size: 12px;
+  }
+}
+@media (max-width: 768px) {
+  .ssh-diagram {
+    gap: 14px;
+    margin-bottom: 35px;
+  }
+
+  .device {
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+    overflow: hidden;
+  }
+
+  .device span {
+    display: none;
+  }
+
+  .connection {
+    width: 200px !important;
+    height: 3px;
+  }
+
+  .ssh-text {
+    top: -24px;
+    font-size: 11px;
+  }
+
+  .password-text {
+    top: 10px;
+    font-size: 11px;
+  }
+
+  .packet {
+    width: 12px;
+    height: 12px;
+    top: -4.5px;
+  }
+
+  @keyframes sshPacket {
+    from {
+      left: 0;
+    }
+
+    to {
+      left: calc(100% - 12px);
+    }
+  }
+}
+.ssh-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.device {
+  padding: 18px 18px;
+  border: 2px solid #00ff9c;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+}
+.device span {
+  margin-left: 4px;
+}
+.connection {
+  width: 320px;
+  height: 4px;
+  background: #444;
+  position: relative;
+}
+
+.ssh-text {
+  position: absolute;
+  top: -35px;
+  width: 100%;
+  text-align: center;
+  color: #00ff9c;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+}
+
+.password-text {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  text-align: center;
+  color: #00ff9c;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+}
+
+.packet {
+  width: 16px;
+  height: 16px;
+  background: #00ff9c;
+  border-radius: 50%;
+  position: absolute;
+  top: -6px;
+  left: 0;
+  animation: sshPacket 2s linear infinite;
+  box-shadow: 0 0 15px #00ff9c;
+}
+[data-bs-theme='light'] {
+  .device {
+    background: #fff;
+    color: #222;
+    border: 2px solid #0a7d53;
+  }
+
+  .connection {
+    background: #bdbdbd;
+  }
+
+  .ssh-text,
+  .password-text {
+    color: #0a7d53;
+  }
+
+  .packet {
+    background: #0a7d53;
+    box-shadow: 0 0 12px rgba(10, 125, 83, 0.5);
+  }
+}
+@keyframes sshPacket {
+  from {
+    left: 0;
+  }
+
+  to {
+    left: calc(100% - 16px);
+  }
+}
+
+:root {
+  --screen-border-color: #252525;
+  --body-color: #bbb;
+  --trackpad-color: #666;
+}
+
+.laptop {
+  width: 60vw;
+  height: 32vw;
+}
+.laptop-screen {
+  position: relative;
+  left: 7%;
+  width: 87%;
+  height: 94%;
+  padding: 3.5%;
+  background-color: var(--screen-border-color);
+  border-radius: 2vw 2vw 0 0;
+}
+.laptop-content {
+  width: 100%;
+  height: 100%;
+  background-color: #37474f;
+  border-radius: 12px;
+}
+h1 {
+  position: relative;
+  top: 50%;
+  margin: 0;
+  color: white;
+  font-family: 'Arvo', sans-serif;
+  font-weight: 400;
+  text-align: center;
+  transform: translateY(-50%);
+}
+.laptop-base {
+  height: 6%;
+  background-color: var(--body-color);
+  border-radius: 0 0 1vw 1vw;
+}
+.laptop-trackpad {
+  position: relative;
+  left: 50%;
+  width: 20%;
+  height: 30%;
+  background-color: var(--trackpad-color);
+  border-radius: 0 0 1vw 1vw;
+  transform: translateX(-50%);
+}
+#terminal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
+.terminal-wrapper {
+  background: #0c0c0c;
+  border: 1px solid #1f1f1f;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 0 25px rgba(0, 255, 156, 0.12);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+#terminal {
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.xterm-viewport {
+  overflow-y: auto !important;
+  scrollbar-width: none;
+}
+
+.xterm-viewport::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
