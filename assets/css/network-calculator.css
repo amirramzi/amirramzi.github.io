@@ -741,3 +741,146 @@ table.nc-table tr.nc-row-highlight td {
   --nc-accent: var(--link-color, #2a5dab);
   color: var(--nc-accent);
 } */
+/* Custom Bootstrap Accordion Replacement for Chirpy */
+
+.accordion {
+  width: 100%;
+}
+
+
+/* Item */
+
+.accordion-item {
+  background-color: var(--main-bg);
+  border: 1px solid var(--card-border-color);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: var(--card-box-shadow);
+}
+
+
+/* Header */
+
+.accordion-header {
+  margin: 0;
+}
+
+
+/* Button */
+
+.accordion-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  padding: 1rem 1.25rem;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  color: var(--heading-color);
+  text-align: left;
+
+  background-color: var(--main-bg);
+
+  border: 0;
+  border-radius: 0;
+
+  cursor: pointer;
+
+  transition:
+    color .2s ease,
+    background-color .2s ease;
+}
+
+
+/* Hover */
+
+.accordion-button:hover {
+  color: var(--link-color);
+  background-color: var(--tag-bg);
+}
+
+
+/* Open state */
+
+.accordion-button:not(.collapsed) {
+  color: var(--link-color);
+  background-color: var(--main-bg);
+}
+
+
+/* Arrow */
+
+.accordion-button::after {
+  content: "";
+
+  width: 0.75rem;
+  height: 0.75rem;
+
+  margin-left: auto;
+
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+
+  transform: rotate(45deg);
+
+  transition: transform .25s ease;
+}
+
+
+/* Open arrow */
+
+.accordion-button:not(.collapsed)::after {
+  transform: rotate(225deg);
+}
+
+
+/* Remove focus */
+
+.accordion-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+/* Collapse */
+
+.accordion-collapse {
+  overflow: hidden;
+  transition: height .35s ease;
+}
+
+
+/* Body */
+
+.accordion-body {
+
+  padding: 1.25rem;
+
+  color: var(--text-color);
+
+  background-color: var(--main-bg);
+
+  line-height: 1.8;
+
+}
+
+
+/* Mobile */
+
+@media (max-width:768px) {
+
+  .accordion-button {
+    padding: .85rem 1rem;
+    font-size: .95rem;
+  }
+
+
+  .accordion-body {
+    padding: 1rem;
+  }
+
+}
