@@ -711,7 +711,7 @@ table.nc-table tr.nc-row-highlight td {
   }
 }
 
-.accordion-item,
+/* .accordion-item,
 .accordion-button,
 .accordion-collapse,
 .accordion-body {
@@ -740,4 +740,4 @@ table.nc-table tr.nc-row-highlight td {
 .accordion-button {
   --nc-accent: var(--link-color, #2a5dab);
   color: var(--nc-accent);
-}
+} */
