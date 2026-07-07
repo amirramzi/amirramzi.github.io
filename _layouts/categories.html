@@ -16,15 +16,19 @@ assign sub_categories = sub_categories | push: second_category %} {% endunless
 {% assign sub_categories_size = sub_categories | size %}
 
 <div class="card categories">
+  <!-- top category -->
+
   <div
     id="{{ HEAD_PREFIX }}{{ group_index }}"
     class="card-header d-flex justify-content-between hide-border-bottom"
   >
     <span class="ms-2">
-      <i class="far fa-folder-open fa-fw"></i>
+      <i
+        class="far fa-folder{% if group_index == 0 %}-open{% endif %} fa-fw"
+      ></i>
 
-      {% capture _category_url %} /categories/{{ category_name | slugify |
-      url_encode }}/ {% endcapture %}
+      {% capture _category_url %}/categories/{{ category_name | slugify |
+      url_encode }}/{% endcapture %}
 
       <a href="{{ _category_url | relative_url }}" class="mx-2">
         {{ category_name }}
@@ -41,6 +45,8 @@ assign sub_categories = sub_categories | push: second_category %} {% endunless
         site.data.locales[lang].categories.post_measure }}
       </span>
     </span>
+
+    <!-- arrow -->
 
     {% if sub_categories_size > 0 %}
 
@@ -63,11 +69,14 @@ assign sub_categories = sub_categories | push: second_category %} {% endunless
     {% endif %}
   </div>
 
+  <!-- sub categories -->
+
   {% if sub_categories_size > 0 %}
 
   <div
     id="{{ LIST_PREFIX }}{{ group_index }}"
     class="collapse{% if group_index == 0 %} show{% endif %}"
+    aria-expanded="{% if group_index == 0 %}true{% else %}false{% endif %}"
   >
     <ul class="list-group">
       {% for sub_category in sub_categories %}
@@ -75,8 +84,8 @@ assign sub_categories = sub_categories | push: second_category %} {% endunless
       <li class="list-group-item">
         <i class="far fa-folder fa-fw"></i>
 
-        {% capture _sub_ctg_url %} /categories/{{ sub_category | slugify |
-        url_encode }}/ {% endcapture %}
+        {% capture _sub_ctg_url %}/categories/{{ sub_category | slugify |
+        url_encode }}/{% endcapture %}
 
         <a href="{{ _sub_ctg_url | relative_url }}" class="mx-2">
           {{ sub_category }}
