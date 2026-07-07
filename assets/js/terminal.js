@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
       foreground: '#00ff9c',
       cursor: '#00ff9c',
       selectionBackground: '#264f78',
-
       black: '#000000',
       red: '#ff5555',
       green: '#50fa7b',
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
       magenta: '#ff79c6',
       cyan: '#8be9fd',
       white: '#f8f8f2',
-
       brightBlack: '#6272a4',
       brightRed: '#ff6e6e',
       brightGreen: '#69ff94',
@@ -38,83 +36,65 @@ document.addEventListener('DOMContentLoaded', () => {
   term.open(document.getElementById('terminal'));
   fitAddon.fit();
 
-  const kaliPrompt = '┌──(amirramzi㉿kali)-[~]\r\n└─# ';
+  const kaliPrompt = '┌──(amirramzi@kali)-[~]\r\n└─# ';
 
-  function prompt() {
-    return Cisco.active ? Cisco.getPrompt() : kaliPrompt;
-  }
+  const ciscoEngine = new CiscoCLIEngine(term, {
+    hostname: 'Amir-R1',
+    enablePassword: '123',
+    vtyPassword: '123',
+  });
+  ciscoEngine.onDisconnect = () => {
+    inCiscoSession = false;
+    term.write(kaliPrompt);
+  };
+
+  let inCiscoSession = false;
 
   term.writeln('Kali GNU/Linux Rolling');
   term.writeln("Welcome to Amirhosein Ramzi's Terminal");
   term.writeln("Type 'help' to see available commands.");
   term.writeln('');
-  term.write(prompt());
+  term.write(kaliPrompt);
 
   let command = '';
 
   term.onData((e) => {
+    if (inCiscoSession) {
+      ciscoEngine.handleInput(e);
+      return;
+    }
+
     switch (e) {
       case '\r':
         term.write('\r\n');
-
-        if (Cisco.waitingPassword) {
-          const success = Cisco.authenticate(term, command.trim());
-
-          command = '';
-
-          if (success) {
-            term.write(Cisco.getPrompt());
-          } else {
-            term.write(kaliPrompt);
-          }
-
-          break;
-        }
-
-        execute(command.trim());
+        executeKaliCommand(command.trim());
         command = '';
-
-        if (!Cisco.waitingPassword) {
-          term.write(prompt());
-        }
+        if (!inCiscoSession) term.write(kaliPrompt);
         break;
 
       case '\u007F':
         if (command.length > 0) {
           command = command.slice(0, -1);
-
-          if (Cisco.waitingPassword) {
-            term.write('\b \b');
-          } else {
-            term.write('\b \b');
-          }
+          term.write('\b \b');
         }
         break;
 
       default:
-        if (Cisco.waitingPassword) {
-          command += e;
-          term.write('*');
-        } else {
-          command += e;
-          term.write(e);
-        }
+        command += e;
+        term.write(e);
     }
   });
 
-  function execute(cmd) {
-    if (Cisco.active) {
-      Cisco.execute(term, cmd);
-      return;
-    }
-
+  function executeKaliCommand(cmd) {
     switch (cmd) {
       case 'ssh admin@router':
       case 'ssh admin@192.168.1.1':
       case 'ssh router':
       case 'ssh cisco':
-        Cisco.login(term);
+        inCiscoSession = true;
+        ciscoEngine.connect();
         break;
+
       case 'help':
         term.writeln('');
         term.writeln('Available commands');
