@@ -6,7 +6,7 @@ categories:
     - FortiGate
 image:
   path:  "../assets/img/fortinet/fortinet.jpg"
-tags: [ّFortiGate, Fortinet , config]
+tags: [ّFortiGate, Fortinet , Config]
 
 ---
 
