@@ -1,13 +1,16 @@
 ---
 title: "Layer 2 Attacks: How DHCP Can Be Used Against You"
 date: 2026-06-29 20:00:00 +0330
-categories: [Write-ups]
+categories: 
+  - Case Studies
+  - Layer 2 Attacks
 image:
   path:  "../assets/img/posts/dhcp-snooping-lab/cover-dhcp.png"
 tags: [DHCP, Cisco, Security , Kali]
 translation_key: dhcp-attacks  
 lang: en
-order: 1
+pin: true
+
 ---
 
 When a device connects to a network, the first thing it does is get an IP address. DHCP handles this automatically — simple, fast, and running on almost every network. But that simplicity comes with a problem: DHCP has no authentication mechanism. Anyone on the network can abuse it.

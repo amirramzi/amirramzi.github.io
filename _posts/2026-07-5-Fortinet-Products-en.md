@@ -1,7 +1,9 @@
 ---
 title: "Fortinet Products"
 date: 2026-06-29 20:00:00 +0330
-categories: [Config]
+categories: 
+ - Enterprise Networking
+ - Fortinet
 image:
   path:  "../assets/img/fortinet/fortinet.jpg"
 tags: [FortiGate, Fortinet , config]

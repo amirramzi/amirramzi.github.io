@@ -1,10 +1,11 @@
 ---
 title: "محصولات فورتی نت"
 date: 2026-06-29 20:00:00 +0330
-categories: [Config]
+categories: 
+  
 image:
   path:  "../assets/img/fortinet/fortinet.jpg"
-tags: [FortiGate , Fortinet, config]
+tags: [FortiGate , Fortinet]
 translation_key: fortinet-product
 lang: fa
 hidden: true

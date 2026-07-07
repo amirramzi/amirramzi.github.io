@@ -170,7 +170,7 @@ class RouterState {
     lines.push('');
     lines.push('Current configuration : 1441 bytes');
     lines.push('!');
-    lines.push(`version 15.2`);
+    lines.push(`version 17.09.01`);
     lines.push('service timestamps debug datetime msec');
     lines.push('service timestamps log datetime msec');
     lines.push('no service password-encryption');

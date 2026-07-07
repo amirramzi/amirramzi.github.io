@@ -1,13 +1,13 @@
 ---
 title: "CCNA Cheat Sheet"
 date: 2026-07-02 20:00:00 +0330
-categories: [Config]
+categories: 
+  - Cheat Sheet
+  - CCNA
 image:
   path:  "../assets/img/cisco/cisco.png"
-tags: [Cisco, ccna , Config]
-
-
-
+tags: [Cisco, CCNA , Config]
+lang: en
 ---
 
 
