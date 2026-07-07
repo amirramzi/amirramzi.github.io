@@ -7,7 +7,7 @@ categories:
 image:
   path:  "../assets/img/cisco/cisco.png"
 tags: [Cisco, CCNA , Config]
-lang: en
+
 ---
 
 

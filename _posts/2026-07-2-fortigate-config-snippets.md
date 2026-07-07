@@ -7,7 +7,7 @@ categories:
 image:
   path:  "../assets/img/fortinet/fortinet.jpg"
 tags: [ّFortiGate, Fortinet , config]
-lang: en
+
 ---
 
 

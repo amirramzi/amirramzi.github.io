@@ -8,7 +8,7 @@ categories:
 image:
   path:  "../assets/img/cisco/cisco.png"
 tags: [ّFortiGate, Fortinet , config]
-lang: en
+
 ---
 
 
