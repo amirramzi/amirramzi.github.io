@@ -1,3 +1,4 @@
+
 class CiscoCLIEngine {
   constructor(term, opts = {}) {
     this.term = term;
@@ -82,12 +83,22 @@ class CiscoCLIEngine {
         this._historyDown();
         break;
 
-      case '\u0003': // Ctrl-C — abort and drop back out of the Cisco session
+      case '\u0003': // Ctrl-C
         this.term.write('^C\r\n');
         this.buffer = '';
         this.cursorPos = 0;
-        this.authStep = null;
-        this._closeConnection();
+        if (
+          this.authStep === 'reload-save' ||
+          this.authStep === 'reload-confirm'
+        ) {
+          // Matches real IOS: Ctrl-C during the reload dialogue cancels
+          // the reload and returns to the normal prompt.
+          this.authStep = null;
+          this.writePrompt();
+        } else {
+          this.authStep = null;
+          this._closeConnection();
+        }
         break;
 
       default:
@@ -97,7 +108,9 @@ class CiscoCLIEngine {
             ch +
             this.buffer.slice(this.cursorPos);
           this.cursorPos++;
-          this.term.write(this.authStep ? '*' : ch);
+          const isPasswordStep =
+            this.authStep === 'password' || this.authStep === 'enable-password';
+          this.term.write(isPasswordStep ? '*' : ch);
         }
     }
   }
@@ -114,6 +127,14 @@ class CiscoCLIEngine {
     }
     if (this.authStep === 'enable-password') {
       this._checkEnablePassword(line);
+      return;
+    }
+    if (this.authStep === 'reload-save') {
+      this._checkReloadSave(line);
+      return;
+    }
+    if (this.authStep === 'reload-confirm') {
+      this._runReload();
       return;
     }
 
@@ -142,7 +163,45 @@ class CiscoCLIEngine {
       return;
     }
 
+    if (result.reload) {
+      this._promptReloadSave();
+      return;
+    }
+
     this.writePrompt();
+  }
+
+  _promptReloadSave() {
+    this.authStep = 'reload-save';
+    this.buffer = '';
+    this.cursorPos = 0;
+    this.term.write('System configuration has been modified. Save? [yes/no]: ');
+  }
+
+  _checkReloadSave(input) {
+    const answer = input.trim().toLowerCase();
+    if (answer === 'yes' || answer === 'y') {
+      this.term.writeln('Building configuration...');
+      this.term.writeln('[OK]');
+    } else if (answer !== 'no' && answer !== 'n' && answer !== '') {
+      // Real IOS just re-asks on unrecognized input.
+      this._promptReloadSave();
+      return;
+    }
+    this.authStep = 'reload-confirm';
+    this.term.write('Proceed with reload? [confirm]');
+  }
+
+  _runReload() {
+    this.authStep = null;
+    this.term.writeln('');
+    this.term.writeln('');
+    this.term.writeln('System Bootstrap, Version 15.2, RELEASE SOFTWARE');
+    this.term.writeln('Press RETURN to get started...');
+    this.term.writeln('');
+    // A real reload drops the remote SSH/VTY session while the device
+    // reboots — modelled here as a disconnect back to the outer shell.
+    this._closeConnection();
   }
 
   _checkVtyPassword(input) {

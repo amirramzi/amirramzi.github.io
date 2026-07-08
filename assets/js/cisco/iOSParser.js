@@ -114,7 +114,7 @@ class IOSParser {
 
     if (this._matches(lc, 'reload')) {
       if (!priv) return { output: this._invalidAt(line, 0) };
-      return { output: ['Proceed with reload? [confirm]'] };
+      return { output: [], reload: true };
     }
 
     return { output: this._invalidAt(line, 0) };
@@ -173,6 +173,12 @@ class IOSParser {
       (sub.startsWith('ip nat translations') || sub.startsWith('ip nat trans'))
     ) {
       return { output: this._showNatTranslations() };
+    }
+    if (
+      this.state.options.enableNat &&
+      (sub.startsWith('ip nat statistics') || sub.startsWith('ip nat stat'))
+    ) {
+      return { output: this._showNatStatistics() };
     }
     if (
       this.state.options.enableDhcp &&
@@ -249,6 +255,35 @@ class IOSParser {
     }
     out.push('');
     return out;
+  }
+
+  _showNatStatistics() {
+    const insideIfaces = Object.entries(this.state.interfaces)
+      .filter(([, i]) => i.natDirection === 'inside')
+      .map(([n]) => n);
+    const outsideIfaces = Object.entries(this.state.interfaces)
+      .filter(([, i]) => i.natDirection === 'outside')
+      .map(([n]) => n);
+    const activeCount = this.state.nat.rules.length > 0 ? 1 : 0;
+    return [
+      '',
+      `Total active translations: ${activeCount} (0 static, ${activeCount} dynamic; 0 extended)`,
+      'Outside interfaces:',
+      outsideIfaces.length
+        ? `  ${outsideIfaces.join(', ')}`
+        : '  (none configured)',
+      'Inside interfaces:',
+      insideIfaces.length
+        ? `  ${insideIfaces.join(', ')}`
+        : '  (none configured)',
+      'Hits: 0  Misses: 0',
+      'Dynamic mappings:',
+      ...this.state.nat.rules.map(
+        (r) =>
+          `-- Inside Source access-list ${r.acl} interface ${r.exitIface} refcount 0`,
+      ),
+      '',
+    ];
   }
 
   _showDhcpBindings() {
@@ -494,6 +529,18 @@ class IOSParser {
       this.state.options.enableDhcp &&
       lc === 'ip' &&
       rest[0] === 'dhcp' &&
+      rest[1] === 'excluded-address'
+    ) {
+      const [start, end] = rest.slice(2);
+      if (!start) return { output: ['% Incomplete command.'] };
+      this.state.dhcpExclusions.push({ start, end: end || start });
+      return { output: [] };
+    }
+
+    if (
+      this.state.options.enableDhcp &&
+      lc === 'ip' &&
+      rest[0] === 'dhcp' &&
       rest[1] === 'pool'
     ) {
       const poolName = rest[2];
@@ -588,14 +635,57 @@ class IOSParser {
   }
 
   _execGlobalConfigNo(rest, line) {
-    if (
-      rest[0] &&
-      this._matches(rest[0].toLowerCase(), 'router') &&
-      rest[1] === 'ospf'
-    ) {
+    const [kw, ...kwRest] = rest;
+    const kwLc = kw ? kw.toLowerCase() : '';
+
+    if (kw && this._matches(kwLc, 'router') && kwRest[0] === 'ospf') {
       this.state.ospf.enabled = false;
       return { output: [] };
     }
+
+    if (this.state.options.enableAcls && kwLc === 'access-list') {
+      const name = kwRest[0];
+      if (!name) return { output: ['% Incomplete command.'] };
+      if (!this.state.acls[name]) return { output: [] }; // real IOS is silent here too
+      delete this.state.acls[name];
+      // Clear any interface bindings that pointed at the deleted ACL.
+      for (const iface of Object.values(this.state.interfaces)) {
+        if (iface.aclIn === name) iface.aclIn = null;
+        if (iface.aclOut === name) iface.aclOut = null;
+      }
+      return { output: [] };
+    }
+
+    if (kwLc === 'ip' && kwRest[0] === 'route') {
+      const [network, mask, via] = kwRest.slice(1);
+      if (!network || !mask || !via)
+        return { output: ['% Incomplete command.'] };
+      const before = this.state.routes.length;
+      this.state.routes = this.state.routes.filter(
+        (r) =>
+          !(
+            r.proto === 'S' &&
+            r.network === network &&
+            r.mask === mask &&
+            r.via === via
+          ),
+      );
+      if (this.state.routes.length === before) {
+        return { output: ['% Route not found'] };
+      }
+      return { output: [] };
+    }
+
+    if (this.state.options.enableVlans && this._matches(kwLc, 'vlan')) {
+      const id = parseInt(kwRest[0], 10);
+      if (!id) return { output: ['% Incomplete command.'] };
+      if (id === 1) return { output: ['% Default VLAN 1 may not be deleted.'] };
+      if (!this.state.vlans[id])
+        return { output: [`% VLAN ${id} not found in current VLAN database`] };
+      delete this.state.vlans[id];
+      return { output: [] };
+    }
+
     return { output: this._invalidAt(line, 0) };
   }
 
