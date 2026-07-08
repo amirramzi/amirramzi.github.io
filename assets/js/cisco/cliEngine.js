@@ -82,16 +82,12 @@ class CiscoCLIEngine {
         this._historyDown();
         break;
 
-      case '\u0003': // Ctrl-C
+      case '\u0003': // Ctrl-C — abort and drop back out of the Cisco session
         this.term.write('^C\r\n');
         this.buffer = '';
         this.cursorPos = 0;
-        if (this.authStep) {
-          this.authStep = null;
-          this._closeConnection();
-        } else {
-          this.writePrompt();
-        }
+        this.authStep = null;
+        this._closeConnection();
         break;
 
       default:

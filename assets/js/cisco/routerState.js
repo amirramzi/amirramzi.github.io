@@ -1,16 +1,3 @@
-/**
- * router-state.js
- * -----------------------------------------------------------------------
- * Pure data model for a virtual Cisco IOS router.
- * No terminal / DOM / xterm concerns live here — this file only tracks
- * "what the router currently believes about itself": hostname, interfaces,
- * routing table, config-mode context, and the running-config text that is
- * generated from all of the above.
- *
- * cli-engine.js talks to the terminal. ios-parser.js talks to this object.
- * -----------------------------------------------------------------------
- */
-
 class RouterState {
   constructor(opts = {}) {
     this.hostname = opts.hostname || 'Router';
@@ -25,6 +12,8 @@ class RouterState {
       enableVlans: opts.enableVlans !== false,
       enableAcls: opts.enableAcls !== false,
       enableOspf: opts.enableOspf !== false,
+      enableNat: opts.enableNat !== false,
+      enableDhcp: opts.enableDhcp !== false,
       motd: opts.motd || 'Unauthorized access prohibited.',
     };
 
@@ -91,6 +80,16 @@ class RouterState {
     // Named/numbered ACLs: name -> { type: 'standard'|'extended', rules: [] }
     this.acls = {};
 
+    // NAT: overload rules created via
+    // "ip nat inside source list <acl> interface <if> overload"
+    this.nat = {
+      rules: [], // { acl, exitIface, overload: bool }
+      translations: [], // simulated live entries, purely cosmetic
+    };
+
+    // DHCP pools: name -> { network, mask, defaultRouter, dnsServer }
+    this.dhcpPools = {};
+
     this.cdpNeighbors = [
       {
         deviceId: 'SW-01',
@@ -124,6 +123,9 @@ class RouterState {
       protocol,
       description: description || '',
       shutdown: status === 'administratively down',
+      natDirection: null, // null | 'inside' | 'outside'
+      aclIn: null, // ACL name applied inbound
+      aclOut: null, // ACL name applied outbound
     };
   }
 
@@ -147,6 +149,8 @@ class RouterState {
         return `${base}(config-router)#`;
       case 'config-vlan':
         return `${base}(config-vlan)#`;
+      case 'config-dhcp':
+        return `${base}(dhcp-config)#`;
       case 'privileged':
         return `${base}#`;
       default:
@@ -159,6 +163,7 @@ class RouterState {
     this.session.currentInterface = null;
     this.session.currentRouterProto = null;
     this.session.currentVlan = null;
+    this.session.currentDhcpPool = null;
   }
 
   /**
@@ -170,7 +175,7 @@ class RouterState {
     lines.push('');
     lines.push('Current configuration : 1441 bytes');
     lines.push('!');
-    lines.push(`version 17.09.01`);
+    lines.push(`version 15.2`);
     lines.push('service timestamps debug datetime msec');
     lines.push('service timestamps log datetime msec');
     lines.push('no service password-encryption');
@@ -198,8 +203,21 @@ class RouterState {
       } else {
         lines.push(' no ip address');
       }
+      if (i.aclIn) lines.push(` ip access-group ${i.aclIn} in`);
+      if (i.aclOut) lines.push(` ip access-group ${i.aclOut} out`);
+      if (i.natDirection) lines.push(` ip nat ${i.natDirection}`);
       lines.push(i.shutdown ? ' shutdown' : ' no shutdown');
       lines.push('!');
+    }
+    if (this.options.enableDhcp) {
+      for (const [name, pool] of Object.entries(this.dhcpPools)) {
+        lines.push(`ip dhcp pool ${name}`);
+        if (pool.network) lines.push(` network ${pool.network} ${pool.mask}`);
+        if (pool.defaultRouter)
+          lines.push(` default-router ${pool.defaultRouter}`);
+        if (pool.dnsServer) lines.push(` dns-server ${pool.dnsServer}`);
+        lines.push('!');
+      }
     }
     if (this.ospf.enabled) {
       lines.push(`router ospf ${this.ospf.processId}`);
@@ -219,6 +237,14 @@ class RouterState {
         }
       }
       if (Object.keys(this.acls).length) lines.push('!');
+    }
+    if (this.options.enableNat) {
+      for (const r of this.nat.rules) {
+        lines.push(
+          `ip nat inside source list ${r.acl} interface ${r.exitIface}${r.overload ? ' overload' : ''}`,
+        );
+      }
+      if (this.nat.rules.length) lines.push('!');
     }
     lines.push('line con 0');
     lines.push('line vty 0 4');

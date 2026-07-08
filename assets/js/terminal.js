@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
     hostname: 'Amir-R1',
     enablePassword: '123',
     vtyPassword: '123',
+    enableAcls: true,
+    enableVlans: true,
   });
   ciscoEngine.onDisconnect = () => {
     inCiscoSession = false;

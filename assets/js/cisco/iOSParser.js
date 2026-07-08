@@ -15,6 +15,28 @@ class IOSParser {
     }
 
     const tokens = line.split(' ');
+    const lc0 = tokens[0].toLowerCase();
+
+    // "do <exec-command>" works from any config sub-mode, like real IOS —
+    // it runs an EXEC command without leaving config mode.
+    if (
+      this.state.session.mode !== 'user' &&
+      this.state.session.mode !== 'privileged' &&
+      lc0.length > 0 &&
+      'do'.startsWith(lc0) &&
+      lc0 !== 'd'
+    ) {
+      const rest = tokens.slice(1).join(' ');
+      if (rest === '') return { output: ['% Incomplete command.'] };
+      return this._execExec(rest.split(' '), rest);
+    }
+
+    // "terminal length 0" / "terminal width 0" etc. — accepted everywhere,
+    // no visible effect in a browser terminal, but real IOS accepts them
+    // in both EXEC and config mode so we do too.
+    if ('terminal'.startsWith(lc0) && lc0.length > 0 && tokens.length > 1) {
+      return { output: [] };
+    }
 
     if (this.state.session.mode === 'config-if') {
       return this._execInterfaceConfig(tokens, line);
@@ -24,6 +46,9 @@ class IOSParser {
     }
     if (this.state.session.mode === 'config-vlan') {
       return this._execVlanConfig(tokens, line);
+    }
+    if (this.state.session.mode === 'config-dhcp') {
+      return this._execDhcpConfig(tokens, line);
     }
     if (this.state.session.mode === 'config') {
       return this._execGlobalConfig(tokens, line);
@@ -71,6 +96,10 @@ class IOSParser {
 
     if (this._matches(lc, 'ping')) {
       return { output: this._execPing(rest) };
+    }
+
+    if (this._matches(lc, 'traceroute')) {
+      return { output: this._execTraceroute(rest) };
     }
 
     if (this._matches(lc, 'write') || this._matches(lc, 'copy')) {
@@ -139,6 +168,18 @@ class IOSParser {
     if (sub.startsWith('spanning-tree')) {
       return { output: this._showSpanningTree() };
     }
+    if (
+      this.state.options.enableNat &&
+      (sub.startsWith('ip nat translations') || sub.startsWith('ip nat trans'))
+    ) {
+      return { output: this._showNatTranslations() };
+    }
+    if (
+      this.state.options.enableDhcp &&
+      (sub.startsWith('ip dhcp binding') || sub.startsWith('ip dhcp bind'))
+    ) {
+      return { output: this._showDhcpBindings() };
+    }
 
     return { output: this._invalidAt(line, this._tokenOffset(line, 1)) };
   }
@@ -183,6 +224,59 @@ class IOSParser {
       'Gi0/2                Desg FWD 4         128.2    P2p',
       '',
     ];
+  }
+
+  _showNatTranslations() {
+    if (this.state.nat.rules.length === 0) {
+      return [
+        '',
+        'Pro Inside global      Inside local       Outside local      Outside global',
+        '',
+      ];
+    }
+    const out = [
+      '',
+      'Pro Inside global      Inside local       Outside local      Outside global',
+    ];
+    // Purely cosmetic simulated entry per configured overload rule, so the
+    // table isn't empty once NAT has actually been configured.
+    for (const rule of this.state.nat.rules) {
+      const iface = this.state.interfaces[rule.exitIface];
+      const globalIp = iface && iface.ip ? iface.ip : '0.0.0.0';
+      out.push(
+        `tcp ${globalIp}:1024      192.168.1.10:1024  8.8.8.8:80         8.8.8.8:80`,
+      );
+    }
+    out.push('');
+    return out;
+  }
+
+  _showDhcpBindings() {
+    const pools = Object.entries(this.state.dhcpPools);
+    if (pools.length === 0) {
+      return [
+        '',
+        'Bindings from all pools not associated with VRF:',
+        'IP address       Client-ID/       Lease expiration        Type',
+        '',
+      ];
+    }
+    const out = [
+      '',
+      'Bindings from all pools not associated with VRF:',
+      'IP address       Client-ID/       Lease expiration        Type',
+    ];
+    for (const [name, pool] of pools) {
+      if (!pool.network) continue;
+      // Simulated single lease per configured pool.
+      const octets = pool.network.split('.');
+      octets[3] = String(Number(octets[3]) + 10);
+      out.push(
+        `${octets.join('.')}   0100.5e00.0${name.length}  ${new Date().toDateString()}      Automatic`,
+      );
+    }
+    out.push('');
+    return out;
   }
 
   _showVersion() {
@@ -276,6 +370,34 @@ class IOSParser {
     return out;
   }
 
+  _execTraceroute(rest) {
+    if (rest.length === 0) return ['% Incomplete command.'];
+    const target = rest[0];
+    const reachable =
+      Object.values(this.state.interfaces).some(
+        (i) => i.ip === target && i.status === 'up',
+      ) ||
+      this.state.routes.some((r) =>
+        target.startsWith(r.network.split('.').slice(0, 3).join('.')),
+      );
+
+    const out = [
+      '',
+      `Type escape sequence to abort.`,
+      `Tracing the route to ${target}`,
+      '',
+    ];
+    if (reachable) {
+      out.push(`  1 ${target} 1 msec 1 msec 1 msec`);
+    } else {
+      out.push('  1  * * *');
+      out.push('  2  * * *');
+      out.push('  3  * * *');
+    }
+    out.push('');
+    return out;
+  }
+
   _execPing(rest) {
     if (rest.length === 0) return ['% Incomplete command.'];
     const target = rest[0];
@@ -335,10 +457,57 @@ class IOSParser {
           protocol: 'down',
           description: '',
           shutdown: true,
+          natDirection: null,
+          aclIn: null,
+          aclOut: null,
         };
       }
       this.state.session.mode = 'config-if';
       this.state.session.currentInterface = ifaceName;
+      return { output: [] };
+    }
+
+    if (
+      this.state.options.enableNat &&
+      lc === 'ip' &&
+      rest[0] === 'nat' &&
+      rest[1] === 'inside' &&
+      rest[2] === 'source'
+    ) {
+      // ip nat inside source list <acl> interface <iface> [overload]
+      const [, , , listKw, acl, ifaceKw, ifaceRaw, overloadKw] = rest;
+      if (listKw !== 'list' || !acl || ifaceKw !== 'interface' || !ifaceRaw) {
+        return { output: ['% Incomplete command.'] };
+      }
+      const ifaceName = this._normalizeInterfaceName(ifaceRaw);
+      if (!ifaceName || !this.state.interfaces[ifaceName])
+        return { output: ['% Invalid interface'] };
+      this.state.nat.rules.push({
+        acl,
+        exitIface: ifaceName,
+        overload: overloadKw === 'overload',
+      });
+      return { output: [] };
+    }
+
+    if (
+      this.state.options.enableDhcp &&
+      lc === 'ip' &&
+      rest[0] === 'dhcp' &&
+      rest[1] === 'pool'
+    ) {
+      const poolName = rest[2];
+      if (!poolName) return { output: ['% Incomplete command.'] };
+      if (!this.state.dhcpPools[poolName]) {
+        this.state.dhcpPools[poolName] = {
+          network: null,
+          mask: null,
+          defaultRouter: null,
+          dnsServer: null,
+        };
+      }
+      this.state.session.mode = 'config-dhcp';
+      this.state.session.currentDhcpPool = poolName;
       return { output: [] };
     }
 
@@ -456,6 +625,33 @@ class IOSParser {
       return { output: [] };
     }
 
+    if (
+      this.state.options.enableNat &&
+      lc === 'ip' &&
+      rest[0] === 'nat' &&
+      (rest[1] === 'inside' || rest[1] === 'outside')
+    ) {
+      iface.natDirection = rest[1];
+      return { output: [] };
+    }
+
+    if (
+      this.state.options.enableAcls &&
+      lc === 'ip' &&
+      rest[0] === 'access-group'
+    ) {
+      const [aclName, direction] = rest.slice(1);
+      if (!aclName || (direction !== 'in' && direction !== 'out')) {
+        return { output: ['% Incomplete command.'] };
+      }
+      if (!this.state.acls[aclName]) {
+        return { output: [`% ACL ${aclName} does not exist`] };
+      }
+      if (direction === 'in') iface.aclIn = aclName;
+      else iface.aclOut = aclName;
+      return { output: [] };
+    }
+
     if (this._matches(lc, 'shutdown')) {
       iface.shutdown = true;
       iface.status = 'administratively down';
@@ -479,6 +675,30 @@ class IOSParser {
       if (sub && sub.toLowerCase() === 'ip' && subRest[0] === 'address') {
         iface.ip = null;
         iface.mask = null;
+        return { output: [] };
+      }
+      if (
+        this.state.options.enableNat &&
+        sub &&
+        sub.toLowerCase() === 'ip' &&
+        subRest[0] === 'nat'
+      ) {
+        iface.natDirection = null;
+        return { output: [] };
+      }
+      if (
+        this.state.options.enableAcls &&
+        sub &&
+        sub.toLowerCase() === 'ip' &&
+        subRest[0] === 'access-group'
+      ) {
+        const direction = subRest[2];
+        if (direction === 'in') iface.aclIn = null;
+        else if (direction === 'out') iface.aclOut = null;
+        else {
+          iface.aclIn = null;
+          iface.aclOut = null;
+        }
         return { output: [] };
       }
       return { output: this._invalidAt(line, 0) };
@@ -543,6 +763,44 @@ class IOSParser {
   }
 
   // ---------------------------------------------------------------------
+  // DHCP pool config mode
+  // ---------------------------------------------------------------------
+  _execDhcpConfig(tokens, line) {
+    const [cmd, ...rest] = tokens;
+    const lc = cmd.toLowerCase();
+    const pool = this.state.dhcpPools[this.state.session.currentDhcpPool];
+
+    if (this._matches(lc, 'exit')) {
+      this.state.session.mode = 'config';
+      this.state.session.currentDhcpPool = null;
+      return { output: [] };
+    }
+    if (lc === 'end') {
+      this.state.resetToUserMode();
+      this.state.session.currentDhcpPool = null;
+      return { output: [] };
+    }
+    if (this._matches(lc, 'network')) {
+      const [network, mask] = rest;
+      if (!network || !mask) return { output: ['% Incomplete command.'] };
+      pool.network = network;
+      pool.mask = mask;
+      return { output: [] };
+    }
+    if (lc === 'default-router') {
+      if (!rest[0]) return { output: ['% Incomplete command.'] };
+      pool.defaultRouter = rest[0];
+      return { output: [] };
+    }
+    if (lc === 'dns-server') {
+      if (!rest[0]) return { output: ['% Incomplete command.'] };
+      pool.dnsServer = rest[0];
+      return { output: [] };
+    }
+    return { output: this._invalidAt(line, 0) };
+  }
+
+  // ---------------------------------------------------------------------
   // Tab completion support (used by cli-engine.js)
   // ---------------------------------------------------------------------
   suggest(partialLine) {
@@ -554,10 +812,14 @@ class IOSParser {
 
   _candidatesForMode() {
     const mode = this.state.session.mode;
-    if (mode === 'config-if')
-      return ['ip', 'shutdown', 'no', 'description', 'exit'];
+    if (mode === 'config-if') {
+      const cands = ['ip', 'shutdown', 'no', 'description', 'exit'];
+      return cands;
+    }
     if (mode === 'config-router') return ['network', 'exit'];
     if (mode === 'config-vlan') return ['name', 'exit'];
+    if (mode === 'config-dhcp')
+      return ['network', 'default-router', 'dns-server', 'exit'];
     if (mode === 'config') {
       const cands = [
         'interface',
