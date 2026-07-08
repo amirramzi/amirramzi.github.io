@@ -1,3 +1,47 @@
+const STORAGE_KEY_ROUTER = 'cisco-emulator:router-state:v1';
+const STORAGE_KEY_SCREEN = 'cisco-emulator:screen-buffer:v1';
+const STORAGE_KEY_SESSION = 'cisco-emulator:session-flags:v1';
+
+function safeLocalStorageGet(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch (err) {
+    console.warn(`localStorage read failed for "${key}":`, err);
+    return null;
+  }
+}
+
+function safeLocalStorageSet(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch (err) {
+    console.warn(`localStorage write failed for "${key}":`, err);
+    return false;
+  }
+}
+
+/**
+ * Attempts to construct + load an xterm.js addon, catching both the
+ * "constructor doesn't exist" case (script didn't load / typo'd global)
+ * and the "loadAddon() throws at runtime" case (e.g. WebGL unavailable).
+ * Returns the addon instance on success, or null on any failure.
+ */
+function tryLoadAddon(term, label, factory) {
+  try {
+    const addon = factory();
+    term.loadAddon(addon);
+    console.info(`[terminal] ${label} addon loaded OK`);
+    return addon;
+  } catch (err) {
+    console.warn(
+      `[terminal] ${label} addon failed to load — continuing without it.`,
+      err,
+    );
+    return null;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const term = new Terminal({
     cursorBlink: true,
@@ -32,9 +76,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const fitAddon = new FitAddon.FitAddon();
   term.loadAddon(fitAddon);
-
   term.open(document.getElementById('terminal'));
   fitAddon.fit();
+
+  const webglAddon = tryLoadAddon(
+    term,
+    'WebGL',
+    () => new WebglAddon.WebglAddon(),
+  );
+  if (webglAddon) {
+    // Per xterm.js docs: WebGL contexts can be lost (GPU driver reset, too
+    // many contexts open, mobile backgrounding). Dispose cleanly and fall
+    // back to the default (canvas) renderer rather than leaving a dead
+    // black terminal on screen.
+    webglAddon.onContextLoss(() => {
+      console.warn(
+        '[terminal] WebGL context lost — falling back to canvas renderer.',
+      );
+      webglAddon.dispose();
+    });
+  }
+  const searchAddon = tryLoadAddon(
+    term,
+    'Search',
+    () => new SearchAddon.SearchAddon(),
+  );
+  const serializeAddon = tryLoadAddon(
+    term,
+    'Serialize',
+    () => new SerializeAddon.SerializeAddon(),
+  );
+
+  window.__terminalAddonStatus = {
+    webgl: !!webglAddon,
+    search: !!searchAddon,
+    serialize: !!serializeAddon,
+  };
+  console.table(window.__terminalAddonStatus);
 
   const kaliPrompt = '┌──(amirramzi@kali)-[~]\r\n└─# ';
 
@@ -45,18 +123,99 @@ document.addEventListener('DOMContentLoaded', () => {
     enableAcls: true,
     enableVlans: true,
   });
+
+  let inCiscoSession = false;
+
   ciscoEngine.onDisconnect = () => {
     inCiscoSession = false;
     term.write(kaliPrompt);
   };
 
-  let inCiscoSession = false;
+  let restoredScreen = false;
+  const savedRouterJson = safeLocalStorageGet(STORAGE_KEY_ROUTER);
+  if (savedRouterJson) {
+    try {
+      ciscoEngine.state.restore(JSON.parse(savedRouterJson));
+    } catch (err) {
+      console.warn('[terminal] Ignoring corrupted saved router state.', err);
+    }
+  }
 
-  term.writeln('Kali GNU/Linux Rolling');
-  term.writeln("Welcome to Amirhosein Ramzi's Terminal");
-  term.writeln("Type 'help' to see available commands.");
-  term.writeln('');
-  term.write(kaliPrompt);
+  const savedSessionJson = safeLocalStorageGet(STORAGE_KEY_SESSION);
+  let savedInCiscoSession = false;
+  if (savedSessionJson) {
+    try {
+      savedInCiscoSession = !!JSON.parse(savedSessionJson).inCiscoSession;
+    } catch (err) {
+      console.warn('[terminal] Ignoring corrupted saved session flags.', err);
+    }
+  }
+
+  if (serializeAddon) {
+    const savedScreen = safeLocalStorageGet(STORAGE_KEY_SCREEN);
+    if (savedScreen) {
+      try {
+        term.write(savedScreen);
+        restoredScreen = true;
+        // The visible prompt/text is restored verbatim, but the engine's
+        // own connected/authenticated flags were already restored from
+        // STORAGE_KEY_ROUTER above, and authStep always resets to null on
+        // a fresh page load (you can't resume mid-password across a
+        // refresh) — so we only need to resume routing keystrokes.
+        inCiscoSession = savedInCiscoSession && ciscoEngine.isConnected();
+      } catch (err) {
+        console.warn('[terminal] Failed to restore screen buffer.', err);
+      }
+    }
+  }
+  if (!restoredScreen) {
+    term.writeln('Kali GNU/Linux Rolling');
+    term.writeln("Welcome to Amirhosein Ramzi's Terminal");
+    term.writeln("Type 'help' to see available commands.");
+    term.writeln('');
+    term.write(kaliPrompt);
+  }
+
+  function persistState() {
+    safeLocalStorageSet(
+      STORAGE_KEY_ROUTER,
+      JSON.stringify(ciscoEngine.state.serialize()),
+    );
+    safeLocalStorageSet(
+      STORAGE_KEY_SESSION,
+      JSON.stringify({ inCiscoSession }),
+    );
+    if (serializeAddon) {
+      try {
+        safeLocalStorageSet(STORAGE_KEY_SCREEN, serializeAddon.serialize());
+      } catch (err) {
+        console.warn('[terminal] Failed to serialize screen buffer.', err);
+      }
+    }
+  }
+
+  window.addEventListener('beforeunload', persistState);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') persistState();
+  });
+  setInterval(persistState, 5000);
+
+  // --- Search (Ctrl+F / Cmd+F) — only wired up if the addon actually loaded ---
+  if (searchAddon) {
+    term.attachCustomKeyEventHandler((e) => {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key.toLowerCase() === 'f' &&
+        e.type === 'keydown'
+      ) {
+        e.preventDefault();
+        const query = window.prompt('Search terminal buffer:');
+        if (query) searchAddon.findNext(query, { incremental: false });
+        return false;
+      }
+      return true;
+    });
+  }
 
   let command = '';
 

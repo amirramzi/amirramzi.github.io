@@ -89,6 +89,7 @@ class RouterState {
 
     // DHCP pools: name -> { network, mask, defaultRouter, dnsServer }
     this.dhcpPools = {};
+    this.dhcpExclusions = []; // { start, end }
 
     this.cdpNeighbors = [
       {
@@ -113,6 +114,79 @@ class RouterState {
 
     this.history = { commands: [] };
     this._bootTime = Date.now();
+  }
+
+  /**
+   * Returns a plain-object snapshot of everything worth persisting across
+   * a page refresh (localStorage, etc). Deliberately excludes things that
+   * shouldn't survive a refresh even though the "device" itself would keep
+   * them: the current in-progress command buffer, auth step, etc. — those
+   * live in CiscoCLIEngine, not here, and are reset on reload anyway.
+   */
+  serialize() {
+    return {
+      v: 1, // bump this if the shape changes, so restore() can migrate/ignore old blobs
+      hostname: this.hostname,
+      enablePassword: this.enablePassword,
+      vtyPassword: this.vtyPassword,
+      options: this.options,
+      session: {
+        privileged: this.session.privileged,
+        mode:
+          this.session.mode === 'user' || this.session.mode === 'privileged'
+            ? this.session.mode
+            : 'privileged',
+        // Sub-modes (config-if, config-vlan, ...) aren't safe to resume into
+        // blind after a refresh (no line context) — collapse back to the
+        // nearest EXEC mode instead of leaving the user stranded.
+      },
+      interfaces: this.interfaces,
+      routes: this.routes,
+      ospf: this.ospf,
+      vlans: this.vlans,
+      acls: this.acls,
+      nat: this.nat,
+      dhcpPools: this.dhcpPools,
+      dhcpExclusions: this.dhcpExclusions,
+      users: this.users,
+      bootTime: this._bootTime, // preserved so "uptime" keeps counting truthfully
+    };
+  }
+
+  /**
+   * Applies a previously-serialized snapshot on top of the current
+   * (default) state. Missing fields are simply left at their defaults,
+   * so older saved blobs from before a feature existed won't crash newer
+   * code — this is intentionally forgiving rather than strict.
+   */
+  restore(data) {
+    if (!data || typeof data !== 'object') return false;
+    try {
+      if (data.hostname) this.hostname = data.hostname;
+      if (data.enablePassword) this.enablePassword = data.enablePassword;
+      if (data.vtyPassword) this.vtyPassword = data.vtyPassword;
+      if (data.options) this.options = { ...this.options, ...data.options };
+      if (data.session) {
+        this.session.privileged = !!data.session.privileged;
+        this.session.mode = this.session.privileged ? 'privileged' : 'user';
+      }
+      if (data.interfaces) this.interfaces = data.interfaces;
+      if (data.routes) this.routes = data.routes;
+      if (data.ospf) this.ospf = data.ospf;
+      if (data.vlans) this.vlans = data.vlans;
+      if (data.acls) this.acls = data.acls;
+      if (data.nat) this.nat = data.nat;
+      if (data.dhcpPools) this.dhcpPools = data.dhcpPools;
+      if (data.dhcpExclusions) this.dhcpExclusions = data.dhcpExclusions;
+      if (data.users) this.users = data.users;
+      if (data.bootTime) this._bootTime = data.bootTime;
+      return true;
+    } catch (err) {
+      // A corrupted/hand-edited localStorage blob shouldn't crash the page —
+      // fall back to whatever defaults the constructor already set up.
+      console.warn('RouterState.restore: ignoring corrupted saved state', err);
+      return false;
+    }
   }
 
   _iface({ ip, mask, status, protocol, description }) {
@@ -210,6 +284,14 @@ class RouterState {
       lines.push('!');
     }
     if (this.options.enableDhcp) {
+      for (const ex of this.dhcpExclusions) {
+        lines.push(
+          ex.start === ex.end
+            ? `ip dhcp excluded-address ${ex.start}`
+            : `ip dhcp excluded-address ${ex.start} ${ex.end}`,
+        );
+      }
+      if (this.dhcpExclusions.length) lines.push('!');
       for (const [name, pool] of Object.entries(this.dhcpPools)) {
         lines.push(`ip dhcp pool ${name}`);
         if (pool.network) lines.push(` network ${pool.network} ${pool.mask}`);
