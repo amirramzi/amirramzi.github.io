@@ -21,17 +21,10 @@ function safeLocalStorageSet(key, value) {
   }
 }
 
-/**
- * Attempts to construct + load an xterm.js addon, catching both the
- * "constructor doesn't exist" case (script didn't load / typo'd global)
- * and the "loadAddon() throws at runtime" case (e.g. WebGL unavailable).
- * Returns the addon instance on success, or null on any failure.
- */
 function tryLoadAddon(term, label, factory) {
   try {
     const addon = factory();
     term.loadAddon(addon);
-    console.info(`[terminal] ${label} addon loaded OK`);
     return addon;
   } catch (err) {
     console.warn(
@@ -86,14 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     () => new WebglAddon.WebglAddon(),
   );
   if (webglAddon) {
-    // Per xterm.js docs: WebGL contexts can be lost (GPU driver reset, too
-    // many contexts open, mobile backgrounding). Dispose cleanly and fall
-    // back to the default (canvas) renderer rather than leaving a dead
-    // black terminal on screen.
     webglAddon.onContextLoss(() => {
-      console.warn(
-        '[terminal] WebGL context lost — falling back to canvas renderer.',
-      );
       webglAddon.dispose();
     });
   }
@@ -107,13 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     'Serialize',
     () => new SerializeAddon.SerializeAddon(),
   );
-
-  window.__terminalAddonStatus = {
-    webgl: !!webglAddon,
-    search: !!searchAddon,
-    serialize: !!serializeAddon,
-  };
-  console.table(window.__terminalAddonStatus);
 
   const kaliPrompt = '┌──(amirramzi@kali)-[~]\r\n└─# ';
 
@@ -158,17 +137,13 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         term.write(savedScreen);
         restoredScreen = true;
-        // The visible prompt/text is restored verbatim, but the engine's
-        // own connected/authenticated flags were already restored from
-        // STORAGE_KEY_ROUTER above, and authStep always resets to null on
-        // a fresh page load (you can't resume mid-password across a
-        // refresh) — so we only need to resume routing keystrokes.
         inCiscoSession = savedInCiscoSession && ciscoEngine.isConnected();
       } catch (err) {
         console.warn('[terminal] Failed to restore screen buffer.', err);
       }
     }
   }
+
   if (!restoredScreen) {
     term.writeln('Kali GNU/Linux Rolling');
     term.writeln("Welcome to Amirhosein Ramzi's Terminal");
@@ -201,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   setInterval(persistState, 5000);
 
-  // --- Search (Ctrl+F / Cmd+F) — only wired up if the addon actually loaded ---
   if (searchAddon) {
     term.attachCustomKeyEventHandler((e) => {
       if (
