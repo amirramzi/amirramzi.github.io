@@ -25,8 +25,8 @@ description: >- # used by seo meta and the atom feed
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
 url: "https://amirramzi.ir"
 
-linkedin:
-  username: amirhosein-ramzi-7553a4416
+# linkedin:
+#   username: amirhosein-ramzi-7553a4416
 
 social:
   # Change to your full name.
@@ -40,7 +40,7 @@ social:
       # change to your GitHub homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
-    - https://www.linkedin.com/in/amirhosein-ramzi-7553a4416
+    # - https://www.linkedin.com/in/amirhosein-ramzi-7553a4416
 
 # Site Verification Settings
 webmaster_verifications:
